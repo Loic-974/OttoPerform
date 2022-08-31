@@ -22,6 +22,7 @@ Encore
 	 */
 	.addEntry("app", "./assets/app.js")
 
+
 	// enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
 	//.enableStimulusBridge("./assets/controllers.json")
 
@@ -55,6 +56,8 @@ Encore
 		config.useBuiltIns = "usage";
 		config.corejs = 3;
 	})
+
+	// .addExternals({react:'react'})
 
 	// enables Sass/SCSS support
 	//.enableSassLoader()

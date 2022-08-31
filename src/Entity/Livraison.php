@@ -29,6 +29,9 @@ class Livraison
     #[ORM\JoinColumn(nullable: false)]
     private ?Commande $id_commande = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $shipped_date = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -84,6 +87,18 @@ class Livraison
     public function setIdCommande(Commande $id_commande): self
     {
         $this->id_commande = $id_commande;
+
+        return $this;
+    }
+
+    public function getShippedDate(): ?\DateTimeInterface
+    {
+        return $this->shipped_date;
+    }
+
+    public function setShippedDate(?\DateTimeInterface $shipped_date): self
+    {
+        $this->shipped_date = $shipped_date;
 
         return $this;
     }
