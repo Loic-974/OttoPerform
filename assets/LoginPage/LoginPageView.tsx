@@ -12,26 +12,40 @@ import {
 } from "@mui/material";
 
 import styled from "styled-components";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { EUserRole } from "../Enum/EUserRole";
+
+interface IConnexion {
+    connexionAllowed: boolean;
+    userRole: EUserRole;
+}
 
 const bgPath = require("../img/bg_login.jpg");
 const logoPath = require("../img/logo.svg");
 
 export const LoginPageView = ({}: {}) => {
-    const [userEmail, setUserEmail] = useState<string>();
+    const [userEmail, setUserEmail] = useState<string>("");
 
-    const [password, setPassword] = useState<string>();
+    const [password, setPassword] = useState<string>("");
 
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
-    async function test() {
+    const [isLoading, setIsLoading] = useState(false);
+
+    async function handleConnexion() {
+        setIsLoading(true);
         axios
-            .post("user/userAdd", {
-                nom: "toto",
+            .post("user/userConnexion", {
+                userEmail,
+                password,
             })
-            .then((response) => console.log(response));
+            .then((response: AxiosResponse<IConnexion, IConnexion>) => {
+                setIsLoading(false);
+                console.log(response);
+                console.log(response.data.connexionAllowed);
+            });
     }
 
     return (
@@ -98,7 +112,9 @@ export const LoginPageView = ({}: {}) => {
                     <StyledForgotPassword>
                         Mot de passe oublié
                     </StyledForgotPassword>
-                    <StyledButton variant="contained">connexion</StyledButton>
+                    <StyledButton variant="contained" onClick={handleConnexion}>
+                        {isLoading ? "Connexion en cours ..." : " Connexion"}
+                    </StyledButton>
                 </StyledFormContainer>
                 <StyledDivider />
                 <StyledText>
