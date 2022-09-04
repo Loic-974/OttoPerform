@@ -16,6 +16,7 @@ import axios, { AxiosResponse } from "axios";
 import { useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { EUserRole } from "../Enum/EUserRole";
+import { useNavigate } from "react-router";
 
 interface IConnexion {
     connexionAllowed: boolean;
@@ -25,7 +26,11 @@ interface IConnexion {
 const bgPath = require("../img/bg_login.jpg");
 const logoPath = require("../img/logo.svg");
 
-export const LoginPageView = ({}: {}) => {
+export const LoginPageView = ({
+    setAuth,
+}: {
+    setAuth: (arg: boolean) => void;
+}) => {
     const [userEmail, setUserEmail] = useState<string>("");
 
     const [password, setPassword] = useState<string>("");
@@ -33,6 +38,8 @@ export const LoginPageView = ({}: {}) => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
     const [isLoading, setIsLoading] = useState(false);
+
+    const navigate = useNavigate();
 
     async function handleConnexion() {
         setIsLoading(true);
@@ -43,8 +50,11 @@ export const LoginPageView = ({}: {}) => {
             })
             .then((response: AxiosResponse<IConnexion, IConnexion>) => {
                 setIsLoading(false);
-                console.log(response);
-                console.log(response.data.connexionAllowed);
+                setAuth(response.data.connexionAllowed);
+                navigate("/test");
+            })
+            .catch((error) => {
+                setIsLoading(false);
             });
     }
 

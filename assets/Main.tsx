@@ -1,16 +1,50 @@
 import React = require("react");
-import { useState } from "react";
-import { Button, StyledEngineProvider, Container } from "@mui/material";
+import { useState, useEffect } from "react";
+import { StyledEngineProvider, Container } from "@mui/material";
 import styled from "styled-components";
 import { LoginPageView } from "./LoginPage/LoginPageView";
 import { MainTheme } from "./mainTheme";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { OrderView } from "./Order/OrderView";
+
 export const Main = ({}) => {
+    const [isUserAuth, setIsUserAuth] = useState<boolean>();
+
     return (
         <MainTheme>
             <StyledEngineProvider injectFirst>
-                <StyledMainContainer maxWidth="xl" disableGutters={true}>
-                    <LoginPageView />
-                </StyledMainContainer>
+                <BrowserRouter>
+                    <Routes>
+                        {isUserAuth && (
+                            <Route
+                                path="/test"
+                                element={
+                                    <StyledMainContainer
+                                        maxWidth="xl"
+                                        disableGutters={true}
+                                    >
+                                        <OrderView />
+                                    </StyledMainContainer>
+                                }
+                            />
+                        )}
+                        {!isUserAuth && (
+                            <Route
+                                path="/"
+                                element={
+                                    <StyledMainContainer
+                                        maxWidth="xl"
+                                        disableGutters={true}
+                                    >
+                                        <LoginPageView
+                                            setAuth={setIsUserAuth}
+                                        />
+                                    </StyledMainContainer>
+                                }
+                            />
+                        )}
+                    </Routes>
+                </BrowserRouter>
             </StyledEngineProvider>
         </MainTheme>
     );

@@ -40,7 +40,15 @@ class UserController extends AbstractController
 
     #[Route('/userConnexion', name: 'api_user_connexion')]
     public function userConnexion(Request $request){
+
+      if(session_id() !== ''){
+        session_destroy();
+      }
+
+      session_start();
+
       $parsedRequest = json_decode($request->getContent());
+
       $email = $parsedRequest->userEmail;
       $password =  $parsedRequest->password;
 
@@ -49,22 +57,23 @@ class UserController extends AbstractController
         "userRole"=>""
       ];
      
-      if(is_string($email) && is_string($password) && !isEmpty($email) &&!isEmpty( $password) ){
+      if(is_string($email) && is_string($password) && $password!=="" && $email !== ""){
 
         $userRepo = new UserRepository( $this->managerRegistry);
 
         $user =  $userRepo->findByEmail($email);
         if( $user && $user->getPassword()==$password) {
 
-          $session = new Session();
-          $session->start();
-
-          $session->set('userName', $user->getPrenom());
-          $session->set('userEmail', $user->getEmail());
-          $session->set('userRole', $user->getRole());
+          $_SESSION['userName']= $user->getPrenom();
+          $_SESSION['userEmail']= $user->getEmail();
+          $_SESSION['userRole']= $user->getRole();
+          $_SESSION['userId']=$user->getId();
 
           $state["connexionAllowed"] = true;
           $state["userRole"] = $user->getRole();
+
+          // Ajouter le path de base
+      
         }
       }
 
@@ -73,14 +82,23 @@ class UserController extends AbstractController
 
 
 
+    #[Route('/isUserConnected', name: 'api_user_state')]
+    public function isUserConnected(Request $request){
+      session_start();
 
-
-
-
-    private function isExpertOrAdmin(User $user):bool{
-      $role = $user->getRole();
-      return ($role == "expert" || $role== "admin");
-
+      $result = [
+        "isAuth"=>false,
+      ];
+    
+      if(isset($_SESSION['userId'])){
+      
+        $result["isAuth"]=true;
+      }
+  
+      
+     return new Response(json_encode(  $result ));
+    
     }
+
 
 }
