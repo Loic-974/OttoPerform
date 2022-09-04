@@ -9,7 +9,8 @@ import { OrderView } from "./Order/OrderView";
 
 export const Main = ({}) => {
     const [isUserAuth, setIsUserAuth] = useState<boolean>();
-
+    //https://www.freecodecamp.org/news/how-to-persist-a-logged-in-user-in-react/
+    // window.localStorage.isMySessionActive = "false"; clean local storage
     return (
         <MainTheme>
             <StyledEngineProvider injectFirst>
