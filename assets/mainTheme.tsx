@@ -6,11 +6,15 @@ export const OXXO_COLORS = {
     colors: {
         darkRed: "#AB2A13",
         mediumRed: "#B71C00",
+        lightRed: "#F44829",
         darkGrey: "#312C2C",
         lightGrey: "#E7E4E5",
         mediumGrey: "#C9C5C6",
         mediumOrange: "#F2A116",
         lightOrange: "#FFB940",
+        lightBlue: "#60D8DF",
+        mediumBlue: "#30AFB6",
+        darkBlue: "#268D93",
     },
 };
 

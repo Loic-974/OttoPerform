@@ -16,7 +16,8 @@ import axios from "axios";
 import { useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-const logoPath = require("../img/bg_login.jpg");
+const bgPath = require("../img/bg_login.jpg");
+const logoPath = require("../img/logo.svg");
 
 export const LoginPageView = ({}: {}) => {
     const [userEmail, setUserEmail] = useState<string>();
@@ -35,7 +36,10 @@ export const LoginPageView = ({}: {}) => {
 
     return (
         <StyledLoginContainer container>
-            <StyledGridImg item xs={3} lg={5}></StyledGridImg>
+            <StyledGridImg item xs={3} lg={5}>
+                {/* <StyledLogo /> */}
+                <StyledImgContainer />
+            </StyledGridImg>
             <StyledGridForm item xs={9} lg={7}>
                 <StyledTitle>IDENTIFICATION</StyledTitle>
 
@@ -44,7 +48,7 @@ export const LoginPageView = ({}: {}) => {
                     <br />
                     Identifiez-vous pour être redirigé sur votre page d'accueil
                 </StyledSubTitle>
-
+                <StyledDivider />
                 <StyledFormContainer>
                     <StyledFormControl fullWidth>
                         <InputLabel htmlFor="userMail">Email</InputLabel>
@@ -115,13 +119,30 @@ export const LoginPageView = ({}: {}) => {
 const StyledLoginContainer = styled(Grid)`
     width: 100%;
     height: 100%;
-    background-color: ${({ theme }) => theme.colors.darkRed};
 `;
 const StyledGridImg = styled(Grid)`
+    position: relative;
+`;
+const StyledLogo = styled.div`
+    margin-top: 24px;
+    margin-left: 24px;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 100;
     background-image: url(${logoPath});
+    background-repeat: no-repeat;
+    background-size: auto;
+    object-fit: contain;
+`;
+const StyledImgContainer = styled.div`
+    width: 100%;
+    height: 100%;
+    background-image: url(${bgPath});
     background-repeat: no-repeat;
     background-size: cover;
     opacity: 0.5;
+    object-fit: contain;
 `;
 const StyledGridForm = styled(Grid)`
     display: flex;
@@ -130,6 +151,7 @@ const StyledGridForm = styled(Grid)`
     justify-content: space-around;
     color: ${({ theme }) => theme.colors.lightGrey};
     background-color: ${({ theme }) => theme.colors.darkGrey};
+    box-shadow: -8px 0 4px ${({ theme }) => theme.colors.darkGrey};
 `;
 
 const StyledFormContainer = styled.div`
@@ -140,8 +162,7 @@ const StyledFormContainer = styled.div`
     flex-grow: 1;
     width: 80%;
     min-height: 40%;
-    margin-top: 24px;
-    padding: 32px 12px 12px 12px;
+    padding: 12px 12px 12px 12px;
 `;
 
 const StyledTitle = styled.p`
@@ -153,7 +174,7 @@ const StyledTitle = styled.p`
     color: ${({ theme }) => theme.colors.mediumGrey};
 `;
 const StyledSubTitle = styled(StyledTitle)`
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-weight: 500;
     margin: 0;
 `;
@@ -174,10 +195,11 @@ const StyledFormControl = styled(FormControl)`
         font-size: 1.5rem;
     }
     .MuiFormLabel-root.MuiInputLabel-root.Mui-focused {
-        color: red;
+        color: ${({ theme }) => theme.colors.mediumBlue};
         font-size: 1.5rem;
+        line-height: 1.45rem;
         background-color: ${({ theme }) => theme.colors.darkGrey};
-        padding: 0px 6px 0 3px;
+        padding: 0px 6px 0px 3px;
     }
     .MuiInputBase-root.MuiOutlinedInput-root {
         color: ${({ theme }) => theme.colors.mediumGrey};
@@ -188,7 +210,7 @@ const StyledFormControl = styled(FormControl)`
 
     .MuiInputBase-root.MuiOutlinedInput-root:hover
         .MuiOutlinedInput-notchedOutline {
-        border-color: red;
+        border-color: ${({ theme }) => theme.colors.mediumBlue};
     }
 
     .MuiSvgIcon-root {
@@ -214,17 +236,18 @@ const StyledButton = styled(Button)`
     margin-top: 32px;
     padding: 16px 8px;
     font-size: 1.2rem;
-    background-color: ${({ theme }) => theme.colors.mediumOrange};
+    background-color: ${({ theme }) => theme.colors.mediumRed};
     :hover {
-        background-color: ${({ theme }) => theme.colors.lightOrange};
-        color: ${({ theme }) => theme.colors.darkGrey};
+        background-color: ${({ theme }) => theme.colors.lightRed};
     }
 `;
 
 const StyledDivider = styled.div`
     width: 80%;
-    height: 2px;
+    height: 1px;
+    padding: 1px;
     background-color: ${({ theme }) => theme.colors.mediumGrey};
+    margin-top: 24px;
     margin-bottom: 24px;
 `;
 
