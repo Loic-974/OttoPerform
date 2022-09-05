@@ -12,7 +12,10 @@ interface IConnexion {
     connexionAllowed: boolean;
     userRole: EUserRole;
 }
-
+/**
+ *All React-Router Routes Component for the current user role
+ * @returns All React-Router Routes Component for the current user role
+ */
 export const MainAppRoutes = ({}: {}) => {
     const [isUserAuth, getIsUserAuth] = useAsyncFn(
         async (userEmail: string, password: string) => {
@@ -21,6 +24,7 @@ export const MainAppRoutes = ({}: {}) => {
                 password: password ?? "",
             });
             const data = query.data.connexionAllowed;
+
             return data;
         },
         []

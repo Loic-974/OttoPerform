@@ -12,6 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
  * @method User|null findOneBy(array $criteria, array $orderBy = null)
  * @method User[]    findAll()
+ * @method User    findByEmail(string $email)
  * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class UserRepository extends ServiceEntityRepository
@@ -40,7 +41,7 @@ class UserRepository extends ServiceEntityRepository
     }
 
    /**
-    * @return ?User Returns an array of User objects
+    * @return ?User Returns an User objects based on the given value
     */
    public function findByEmail($value): ?User
    {

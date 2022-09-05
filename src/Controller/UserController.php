@@ -8,11 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
-use App\Entity\User;
-
-
-use function PHPUnit\Framework\isEmpty;
 
 #[Route('/user', name: 'api_user')]
 class UserController extends AbstractController
@@ -29,15 +24,21 @@ class UserController extends AbstractController
 
 
 
-    #[Route('/userAdd', name: 'api_user_add')]
+    // #[Route('/userAdd', name: 'api_user_add')]
 
-    public function userAdd(Request $request){
-      var_dump(json_decode($request->getContent()));
-      return new Response();
-    }
+    // public function userAdd(Request $request){
+    //   var_dump(json_decode($request->getContent()));
+    //   return new Response();
+    // }
 
 
-
+    /**
+     * Check if given credentials match with an user 
+     * if yes we return a truthy state else return false state
+     * - Open Session and store user data inside -
+     * @param Request $request
+     * @return {connexionAllowed : boolean , userRole:string|null}
+     */
     #[Route('/userConnexion', name: 'api_user_connexion')]
     public function userConnexion(Request $request){
     
@@ -51,13 +52,12 @@ class UserController extends AbstractController
       ];
 
       if( $session->get("userRole")){
-        echo("toto");
-      //  session_destroy();
+   
       $state["connexionAllowed"] = true;
       $state["userRole"] = $session->get("userRole");
-      // $state["userRole"] = $_SESSION["userRole"];
+  
       
-      }else{
+      } else {
 
         
         $parsedRequest = json_decode($request->getContent());
@@ -74,6 +74,7 @@ class UserController extends AbstractController
 
             $user =  $userRepo->findByEmail($email);
 
+            // Update with Hash password later
             if( $user && $user->getPassword()==$password) {
 
 
@@ -82,19 +83,11 @@ class UserController extends AbstractController
               $session->set("userName",$user->getPrenom());
               $session->set("userId",$user->getId());
 
-
-              // $_SESSION['userName']= $user->getPrenom();
-              // $_SESSION['userEmail']= $user->getEmail();
-              // $_SESSION['userRole']= $user->getRole();
-              // $_SESSION['userId']=$user->getId();
-
               $state["connexionAllowed"] = true;
               $state["userRole"] = $user->getRole();
 
               $session->save();
-
-              // Ajouter le path de base
-          
+      
             }
          }
         }
@@ -107,18 +100,7 @@ class UserController extends AbstractController
 
 
 
-    #[Route('/isUserConnected', name: 'api_user_state')]
-    public function isUserConnected(Request $request){
-
-      session_start();
-
-      if(isset($_SESSION['userId'])){
-        $_SESSION["isAuth"]=true;
-      }
-  
-     return new Response(json_encode( $_SESSION)||null);
-    
-    }
+ 
 
 
 }

@@ -23,6 +23,9 @@ const logoPath = require("../img/logo.svg");
 export const LoginPageView = ({
     onLogin,
 }: {
+    /**
+     * OnSubmitButtonClick  function
+     */
     onLogin: (arg: string, arg2: string) => Promise<boolean>;
 }) => {
     const [userEmail, setUserEmail] = useState<string>("");
