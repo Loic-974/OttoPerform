@@ -12,24 +12,18 @@ import {
 } from "@mui/material";
 
 import styled from "styled-components";
-import axios, { AxiosResponse } from "axios";
 import { useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { EUserRole } from "../Enum/EUserRole";
 import { useNavigate } from "react-router";
 
-interface IConnexion {
-    connexionAllowed: boolean;
-    userRole: EUserRole;
-}
-
 const bgPath = require("../img/bg_login.jpg");
 const logoPath = require("../img/logo.svg");
 
 export const LoginPageView = ({
-    setAuth,
+    onLogin,
 }: {
-    setAuth: (arg: boolean) => void;
+    onLogin: (arg: string, arg2: string) => Promise<boolean>;
 }) => {
     const [userEmail, setUserEmail] = useState<string>("");
 
@@ -39,23 +33,10 @@ export const LoginPageView = ({
 
     const [isLoading, setIsLoading] = useState(false);
 
-    const navigate = useNavigate();
-
     async function handleConnexion() {
         setIsLoading(true);
-        axios
-            .post("user/userConnexion", {
-                userEmail,
-                password,
-            })
-            .then((response: AxiosResponse<IConnexion, IConnexion>) => {
-                setIsLoading(false);
-                setAuth(response.data.connexionAllowed);
-                navigate("/test");
-            })
-            .catch((error) => {
-                setIsLoading(false);
-            });
+        await onLogin(userEmail, password);
+        setIsLoading(false);
     }
 
     return (
