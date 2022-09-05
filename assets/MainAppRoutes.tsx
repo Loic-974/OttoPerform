@@ -33,15 +33,20 @@ export const MainAppRoutes = ({}: {}) => {
     const navigate = useNavigate();
 
     React.useEffect(() => {
-        if (isUserAuth) {
-            navigate("/");
+        getIsUserAuth("", "");
+    }, []);
+
+    React.useEffect(() => {
+        if (isUserAuth.value) {
+            console.log(isUserAuth.value);
+            navigate("orders");
         }
     }, [isUserAuth]);
 
     return (
         <Routes>
-            {isUserAuth &&
-                App_routes.map((route) => (
+            <Route path="/">
+                {App_routes.map((route) => (
                     <Route
                         key={route.path}
                         path={route.path}
@@ -55,20 +60,20 @@ export const MainAppRoutes = ({}: {}) => {
                         }
                     />
                 ))}
-
-            {!isUserAuth && (
-                <Route
-                    path="/"
-                    element={
-                        <StyledMainContainer
-                            maxWidth="xl"
-                            disableGutters={true}
-                        >
-                            <LoginPageView onLogin={getIsUserAuth} />
-                        </StyledMainContainer>
-                    }
-                />
-            )}
+                {!isUserAuth && (
+                    <Route
+                        path=":login"
+                        element={
+                            <StyledMainContainer
+                                maxWidth="xl"
+                                disableGutters={true}
+                            >
+                                <LoginPageView onLogin={getIsUserAuth} />
+                            </StyledMainContainer>
+                        }
+                    />
+                )}
+            </Route>
         </Routes>
     );
 };

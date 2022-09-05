@@ -10,7 +10,8 @@ export interface IRoute {
 
 export const App_routes: IRoute[] = [
     {
-        path: "/",
+        // path ="/" because is the index of logged state
+        path: ":orders",
         component: <OrderView />,
         name: "Commandes",
     },
