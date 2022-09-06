@@ -14,19 +14,20 @@ import {
 import styled from "styled-components";
 import { useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { EUserRole } from "../Enum/EUserRole";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../AuthProvider";
 
 const bgPath = require("../img/bg_login.jpg");
 const logoPath = require("../img/logo.svg");
 
-export const LoginPageView = ({
-    onLogin,
-}: {
+export const LoginPageView = ({}: // onLogin,
+// isAuthLogged,
+{
     /**
      * OnSubmitButtonClick  function
      */
-    onLogin: (arg: string, arg2: string) => Promise<boolean>;
+    // onLogin: (arg: string, arg2: string) => Promise<boolean>;
+    // isAuthLogged: boolean | undefined;
 }) => {
     const [userEmail, setUserEmail] = useState<string>("");
 
@@ -36,11 +37,24 @@ export const LoginPageView = ({
 
     const [isLoading, setIsLoading] = useState(false);
 
+    const { login } = useAuth();
+
     async function handleConnexion() {
         setIsLoading(true);
-        await onLogin(userEmail, password);
+        //@ts-ignore
+        await login(userEmail, password);
         setIsLoading(false);
     }
+
+    // const navigate = useNavigate();
+    // const location = useLocation();
+
+    // React.useEffect(() => {
+    //     if (isAuthLogged) {
+    //         const path = location.pathname;
+    //         navigate(path === "/" ? "orders" : path);
+    //     }
+    // }, [isAuthLogged]);
 
     return (
         <StyledLoginContainer container>

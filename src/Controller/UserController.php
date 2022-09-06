@@ -48,13 +48,15 @@ class UserController extends AbstractController
     
       $state =[ 
         "connexionAllowed"=>false,
-        "userRole"=>""
+        "userRole"=>"",
+        "userEmail"=> "",
       ];
 
       if( $session->get("userRole")){
    
       $state["connexionAllowed"] = true;
       $state["userRole"] = $session->get("userRole");
+      $state["userEmail"] = $session->get("userEmail");
   
       
       } else {
@@ -85,6 +87,7 @@ class UserController extends AbstractController
 
               $state["connexionAllowed"] = true;
               $state["userRole"] = $user->getRole();
+              $state["userEmail"] = $user->getEmail();
 
               $session->save();
       
@@ -97,6 +100,26 @@ class UserController extends AbstractController
     }
 
 
+    #[Route('/userCheckIsLogin', name: 'api_user_check_isLogin')]
+    public function checkUserLoginStateByEmail(Request $request){
+
+      $state =[ 
+        "connexionAllowed"=>false,
+        "userRole"=>""
+      ];
+
+      $session =  $request->getSession();
+      $parsedRequest = json_decode($request->getContent());
+
+      if($session->isStarted() && $session->get("userEmail")){
+        if(isset($parsedRequest->userEmail) &&   $session->get("userEmail") === $parsedRequest->userEmail){
+          $state["connexionAllowed"] = true;
+          $state["userRole"] = $session->get("userRole");
+          $state["userEmail"] = $session->get("userEmail");
+        }
+      };
+      return new Response(json_encode($state));
+    }
 
 
 
