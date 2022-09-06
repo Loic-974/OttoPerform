@@ -47,9 +47,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         [isUserConnected]
     );
 
-    React.useEffect(() => {
-        isUserAlreadyLogged(userEmail);
-    }, [userEmail]);
+    if (userEmail) {
+        React.useEffect(() => {
+            isUserAlreadyLogged(userEmail);
+        }, [userEmail]);
+    }
 
     async function connect(userEmail: string, password: string) {
         const query = await axios.post<IConnexion>("user/userConnexion", {

@@ -14,21 +14,12 @@ import {
 import styled from "styled-components";
 import { useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthProvider";
 
 const bgPath = require("../img/bg_login.jpg");
 const logoPath = require("../img/logo.svg");
 
-export const LoginPageView = ({}: // onLogin,
-// isAuthLogged,
-{
-    /**
-     * OnSubmitButtonClick  function
-     */
-    // onLogin: (arg: string, arg2: string) => Promise<boolean>;
-    // isAuthLogged: boolean | undefined;
-}) => {
+export const LoginPageView = ({}: {}) => {
     const [userEmail, setUserEmail] = useState<string>("");
 
     const [password, setPassword] = useState<string>("");
@@ -37,7 +28,7 @@ export const LoginPageView = ({}: // onLogin,
 
     const [isLoading, setIsLoading] = useState(false);
 
-    const { login } = useAuth();
+    const { login, isUserConnected } = useAuth();
 
     async function handleConnexion() {
         setIsLoading(true);
@@ -46,17 +37,9 @@ export const LoginPageView = ({}: // onLogin,
         setIsLoading(false);
     }
 
-    // const navigate = useNavigate();
-    // const location = useLocation();
-
-    // React.useEffect(() => {
-    //     if (isAuthLogged) {
-    //         const path = location.pathname;
-    //         navigate(path === "/" ? "orders" : path);
-    //     }
-    // }, [isAuthLogged]);
-
-    return (
+    return isUserConnected ? (
+        <></>
+    ) : (
         <StyledLoginContainer container>
             <StyledGridImg item xs={3} lg={5}>
                 {/* <StyledLogo /> */}

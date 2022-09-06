@@ -1,5 +1,5 @@
 import React = require("react");
 
 export const OrderView = ({}: {}) => {
-    return <p> Uatre page </p>;
+    return <p> OrderView page </p>;
 };

@@ -7,15 +7,23 @@ import {
     Outlet,
     Route,
     Routes,
+    useLocation,
 } from "react-router-dom";
 import { LoginPageView } from "./LoginPage/LoginPageView";
 import { AuthProvider, useAuth } from "./AuthProvider";
 import { MainContainer } from "./MainContainer";
 import { OrderView } from "./Order/OrderView";
 import { useState } from "react";
+import { ALL_ROUTES } from "./App_routes";
+import { useAsync } from "react-use";
 
 export const Main = ({}) => {
-    const [isUserConnected, setIsUserConnected] = useState(false);
+    const [isUserConnected, setIsUserConnected] = useState(true);
+
+    const all_routes = useAsync(
+        async () => await ALL_ROUTES(),
+        [isUserConnected]
+    ).value;
 
     return (
         <MainTheme>
@@ -24,35 +32,48 @@ export const Main = ({}) => {
                     <AuthProvider>
                         <Routes>
                             <Route
+                                path="/"
                                 element={
                                     <HomeLayout
                                         setIsUserConnected={setIsUserConnected}
                                     />
                                 }
                             >
-                                <Route path="/" element={<LoginPageView />} />
+                                <Route index element={<LoginPageView />} />
                             </Route>
-                            <Route
-                                path="/dashboard"
-                                element={
-                                    <ProtectedLayout
-                                        isUserConnected={isUserConnected}
+
+                            {all_routes?.map((route) =>
+                                route.isIndex ? (
+                                    <Route
+                                        index={true}
+                                        element={
+                                            <ProtectedLayout
+                                                setIsUserConnected={
+                                                    setIsUserConnected
+                                                }
+                                            >
+                                                {route.component}
+                                            </ProtectedLayout>
+                                        }
+                                        key={route.path}
                                     />
-                                }
-                            >
-                                <Route index={true} element={<OrderView />} />
-                                {/* --- Insert Other Page Here ---- */}
-                            </Route>
-                            <Route
-                                path="/dashboard/expert"
-                                element={
-                                    <ProtectedLayout
-                                        isUserConnected={isUserConnected}
+                                ) : (
+                                    <Route
+                                        key={route.path}
+                                        path={route.path}
+                                        element={
+                                            <ProtectedLayout
+                                                setIsUserConnected={
+                                                    setIsUserConnected
+                                                }
+                                            >
+                                                {route.component}
+                                            </ProtectedLayout>
+                                        }
                                     />
-                                }
-                            >
-                                {/* --- Insert Expert Page Here ---- */}
-                            </Route>
+                                )
+                            )}
+                            {/* <Route path="*" element={<p>not found</p>} /> */}
                         </Routes>
                     </AuthProvider>
                 </BrowserRouter>
@@ -69,28 +90,39 @@ const HomeLayout = ({ setIsUserConnected }: { setIsUserConnected: any }) => {
     }, [isUserConnected]);
 
     if (isUserConnected) {
-        return <Navigate to="/dashboard" />;
+        return <Navigate to="/orders" replace={true} />;
     }
 
     return (
-        <MainContainer>
-            <Outlet />
+        <MainContainer isNavDisplay={false}>
+            {!isUserConnected ? <Outlet /> : <p>toto</p>}
         </MainContainer>
     );
 };
 
 export const ProtectedLayout = ({
-    isUserConnected,
+    setIsUserConnected,
+    children,
 }: {
-    isUserConnected: boolean;
+    setIsUserConnected: any;
+    children: React.ReactNode;
 }) => {
+    const { isUserConnected } = useAuth();
+
+    const location = useLocation(); // react-router-dom
+
+    React.useEffect(() => {
+        setIsUserConnected(isUserConnected);
+    }, [isUserConnected]);
+
     if (!isUserConnected) {
-        return <Navigate to="/" />;
+        return <Navigate to="/" replace={true} />;
     }
 
     return (
         <MainContainer>
-            <Outlet />
+            {/* <Outlet key="ok" /> */}
+            {children}
         </MainContainer>
     );
 };

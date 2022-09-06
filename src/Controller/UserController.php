@@ -105,7 +105,8 @@ class UserController extends AbstractController
 
       $state =[ 
         "connexionAllowed"=>false,
-        "userRole"=>""
+        "userRole"=>"",
+        "userEmail"=>""
       ];
 
       $session =  $request->getSession();
@@ -121,6 +122,29 @@ class UserController extends AbstractController
       return new Response(json_encode($state));
     }
 
+
+    #[Route('/userGetRole', name: 'api_user_get_role')]
+    public function getUserRole(Request $request){
+
+      $state =[ 
+        "connexionAllowed"=>false,
+        "userRole"=>"",
+        "userEmail"=>""
+      ];
+
+      $session =  $request->getSession();
+
+
+      if($session->isStarted() && $session->get("userRole")){
+      
+          $state["connexionAllowed"] = true;
+          $state["userRole"] = $session->get("userRole");
+          $state["userEmail"] = $session->get("userEmail");
+        
+      };
+      
+      return new Response(json_encode($state));
+    }
 
 
  
