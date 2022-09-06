@@ -28,7 +28,7 @@ export const MainContainer = ({
 const StyledMainContainer = styled(Container)<{ $isDisplayMenu: any }>`
     background-color: ${({ theme }) => theme.colors.darkGrey};
     width: 100%;
-    padding-left: ${(props) => (props.$isDisplayMenu ? "min(35px, 2vw)" : 0)};
+    padding-left: ${(props) => (props.$isDisplayMenu ? "min(30px, 2vw)" : 0)};
     height: 100%;
     max-width: 100%;
     box-sizing: border-box;

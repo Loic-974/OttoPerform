@@ -46,6 +46,7 @@ const StyledMenuNav = styled.div`
     height: 100%;
     width: min(30px, 2vw);
     background-color: ${({ theme }) => theme.colors.darkGrey};
+    box-shadow: 1px 0px 6px #2e2e2ea7;
 `;
 
 const StyledTrigger = styled.div`
