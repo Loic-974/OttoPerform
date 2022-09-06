@@ -23,7 +23,7 @@ export const APP_ROUTES: IRoute[] = [
     {
         path: "/shipping",
         component: <ShippingView key={"shipping"} />,
-        name: "Livraison",
+        name: "Livraisons",
     },
 ];
 
