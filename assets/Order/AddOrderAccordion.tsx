@@ -20,6 +20,7 @@ import { DUMMY_API_CITY_GOUV } from "../api/DUMMY_API_CITY_GOUV";
 interface IVilleOption {
     label: string;
     codePostaux: string[];
+    secteur: number;
 }
 
 export interface ISelectOption {
@@ -37,13 +38,12 @@ export const AddOrderAccordion = ({}: {}) => {
     const [clientAdresse, setClientAdresse] = useState<string>("");
     const [clientVille, setClientVille] = useState<IVilleOption | null>(null);
     const [clientCodeP, setClientCodeP] = useState<string | null>("");
-    const [clientSecteur, setClientSecteur] = useState<ISelectOption | null>(
-        null
-    );
+    const [clientSecteur, setClientSecteur] = useState<number>(0);
 
     const cityOptions: IVilleOption[] = DUMMY_API_CITY_GOUV.map((item) => ({
         label: item.nom,
         codePostaux: item.codesPostaux,
+        secteur: item.secteur,
     }));
 
     const codePostalOptions = React.useMemo(
@@ -61,11 +61,16 @@ export const AddOrderAccordion = ({}: {}) => {
                 (item) => item.label === existingClient?.ville
             );
             setClientVille(villeOption ? villeOption : null);
-
             setClientCodeP(existingClient?.codePostal);
-            //setClientSecteur(existingClient?.secteur);
+            setClientSecteur(existingClient?.secteur);
         }
     }, [existingClient]);
+
+    React.useEffect(() => {
+        if (clientVille) {
+            setClientSecteur(clientVille?.secteur);
+        }
+    }, [clientVille]);
 
     async function getAllClientList() {
         const query = await axios.get<IClient[]>("/client/clientList");
@@ -231,14 +236,17 @@ export const AddOrderAccordion = ({}: {}) => {
                                 select
                                 disabled
                                 label="Secteur"
-                                //   value={currency}
+                                placeholder="Secteur"
+                                value={clientSecteur}
                                 //   onChange={handleChange}
                                 variant="outlined"
                                 size="small"
                             >
-                                <MenuItem value={10}>Ten</MenuItem>
-                                <MenuItem value={20}>Twenty</MenuItem>
-                                <MenuItem value={30}>Thirty</MenuItem>
+                                <MenuItem value={1}>Ouest</MenuItem>
+                                <MenuItem value={2}>Sud</MenuItem>
+                                <MenuItem value={3}>Grand-Sud</MenuItem>
+                                <MenuItem value={4}>Nord</MenuItem>
+                                <MenuItem value={5}>Est</MenuItem>
                             </StyledTextField>
                         </StyledGridItem>
                     </StyledGridItemContainer>

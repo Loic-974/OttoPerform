@@ -8,6 +8,7 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97425"],
         population: 11440,
+        secteur: 2,
     },
     {
         nom: "Bras-Panon",
@@ -18,6 +19,7 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97412"],
         population: 13057,
+        secteur: 5,
     },
     {
         nom: "Entre-Deux",
@@ -28,6 +30,7 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97414"],
         population: 6927,
+        secteur: 2,
     },
     {
         nom: "L'Étang-Salé",
@@ -38,6 +41,7 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97427"],
         population: 14059,
+        secteur: 2,
     },
     {
         nom: "Petite-Île",
@@ -48,6 +52,7 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97429"],
         population: 12395,
+        secteur: 3,
     },
     {
         nom: "La Plaine-des-Palmistes",
@@ -58,6 +63,7 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97431"],
         population: 6626,
+        secteur: 5,
     },
     {
         nom: "Le Port",
@@ -68,6 +74,7 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97420"],
         population: 32977,
+        secteur: 1,
     },
     {
         nom: "La Possession",
@@ -78,6 +85,7 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97419"],
         population: 32985,
+        secteur: 1,
     },
     {
         nom: "Saint-André",
@@ -88,6 +96,7 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97440"],
         population: 56902,
+        secteur: 5,
     },
     {
         nom: "Saint-Benoît",
@@ -98,6 +107,7 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97437", "97470"],
         population: 37036,
+        secteur: 5,
     },
     {
         nom: "Saint-Denis",
@@ -108,6 +118,7 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97400", "97490", "97417"],
         population: 153810,
+        secteur: 4,
     },
     {
         nom: "Saint-Joseph",
@@ -118,6 +129,7 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97480"],
         population: 37918,
+        secteur: 3,
     },
     {
         nom: "Saint-Leu",
@@ -128,6 +140,7 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97416", "97424", "97436"],
         population: 34586,
+        secteur: 1,
     },
     {
         nom: "Saint-Louis",
@@ -138,6 +151,7 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97421", "97450"],
         population: 53120,
+        secteur: 2,
     },
     {
         nom: "Saint-Paul",
@@ -148,6 +162,7 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97423", "97434", "97435", "97460", "97411", "97422"],
         population: 103208,
+        secteur: 1,
     },
     {
         nom: "Saint-Pierre",
@@ -158,6 +173,7 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97410", "97432"],
         population: 84982,
+        secteur: 2,
     },
     {
         nom: "Saint-Philippe",
@@ -168,6 +184,7 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97442"],
         population: 5198,
+        secteur: 5,
     },
     {
         nom: "Sainte-Marie",
@@ -178,6 +195,7 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97438"],
         population: 34061,
+        secteur: 4,
     },
     {
         nom: "Sainte-Rose",
@@ -188,6 +206,7 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97439"],
         population: 6345,
+        secteur: 5,
     },
     {
         nom: "Sainte-Suzanne",
@@ -198,6 +217,7 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97441"],
         population: 24065,
+        secteur: 4,
     },
     {
         nom: "Salazie",
@@ -208,6 +228,7 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97433"],
         population: 7136,
+        secteur: 5,
     },
     {
         nom: "Le Tampon",
@@ -218,6 +239,7 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97430", "97418"],
         population: 79824,
+        secteur: 3,
     },
     {
         nom: "Les Trois-Bassins",
@@ -228,6 +250,7 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97426"],
         population: 7015,
+        secteur: 1,
     },
     {
         nom: "Cilaos",
@@ -238,5 +261,6 @@ export const DUMMY_API_CITY_GOUV = [
         codeRegion: "04",
         codesPostaux: ["97413"],
         population: 5538,
+        secteur: 2,
     },
 ];
