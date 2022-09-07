@@ -122,4 +122,12 @@ class Secteur
 
         return $this;
     }
+
+    public function toJson(){
+        return [
+            "id"=>$this->getId(),
+            "nom_secteur"=>$this->getNomSecteur(),
+            "gestionnaire"=>$this->getGestionnaire(),
+        ];
+    }
 }

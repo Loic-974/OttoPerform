@@ -104,22 +104,15 @@ export const AddOrderAccordion = ({}: {}) => {
             orderQte,
         };
 
-        const orderGlobalData = { clientData, orderData };
-
-        axios.post("", orderGlobalData);
-    }
-
-    async function test() {
-        const clientData = {
-            clientName,
-            clientFirstName,
-            clientAdresse,
-            clientVille: clientVille?.label,
-            clientCodeP,
-            clientSecteur,
-        };
-
-        axios.post("/client/addClient", { clientData });
+        // axios.post("/client/addClient", {
+        //     clientName,
+        //     clientFirstName,
+        //     clientAdresse,
+        //     clientVille: clientVille?.label,
+        //     clientCodeP,
+        //     clientSecteur,
+        // });
+        axios.post("/commande/addCommand", { clientData, orderData });
     }
 
     // -------------------------------------------------------------------------------------------------------------------- //
@@ -318,7 +311,7 @@ export const AddOrderAccordion = ({}: {}) => {
                         <StyledGridItem item xs={6} justifySelf={"self-end"}>
                             <StyledButton
                                 variant="contained"
-                                onClick={() => test()}
+                                onClick={() => addNewCommand()}
                             >
                                 Ajouter la commande
                             </StyledButton>

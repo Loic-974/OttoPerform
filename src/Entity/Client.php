@@ -50,6 +50,13 @@ class Client
         return $this->id;
     }
 
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
     public function getNom(): ?string
     {
         return $this->nom;
@@ -161,7 +168,7 @@ class Client
             "adresse" => $this->getAdresse(),
             "codePostal" => $this->getCodePostal(),
             "ville" => $this->getVille(),
-            "secteur" => $this->getIdSecteur(),
+            "secteur" => $this->getIdSecteur()->toJson(),
         ];
 
     }

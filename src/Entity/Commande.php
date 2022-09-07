@@ -29,11 +29,11 @@ class Commande
     #[ORM\Column(length: 64)]
     private ?string $type = null;
 
-    #[ORM\ManyToOne(inversedBy: 'commandes')]
+    #[ORM\ManyToOne(inversedBy: 'commandes', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Client $id_client = null;
 
-    #[ORM\ManyToOne(inversedBy: 'commandes')]
+    #[ORM\ManyToOne(inversedBy: 'commandes', cascade: ['persist', 'remove']),]
     #[ORM\JoinColumn(nullable: false)]
     private ?Produit $id_produit = null;
 
@@ -145,6 +145,20 @@ class Commande
         $this->livraison = $livraison;
 
         return $this;
+    }
+
+
+    public function toJson(){
+       return [
+            "id"=>$this->getId(),
+            "client"=>$this->getIdClient()->toJson(),
+            "produit"=>$this->getIdProduit()->toJson(),
+            "date_creation"=>$this->getDateCreation(),
+            "date_livraison"=>$this->getDateLivraison(),
+            "quanite"=>$this->getQuantite(),
+            "statut"=>$this->getStatut(),
+            "type"=>$this->getType(),
+       ];
     }
 
 }

@@ -39,6 +39,17 @@ class ProduitRepository extends ServiceEntityRepository
         }
     }
 
+
+       public function findOneProductById($value): ?Produit
+   {
+       return $this->createQueryBuilder('p')
+           ->andWhere('p.id = :val')
+           ->setParameter('val', $value)
+           ->getQuery()
+           ->getOneOrNullResult()
+       ;
+   }
+
 //    /**
 //     * @return Produit[] Returns an array of Produit objects
 //     */

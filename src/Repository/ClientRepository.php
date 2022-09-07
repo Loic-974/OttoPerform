@@ -41,7 +41,20 @@ class ClientRepository extends ServiceEntityRepository
 
 
   
-  
+      /**
+     * Find a Client by Field Id
+     * @param string $value
+     * @return Client|null
+     */
+    public function findOneClientById($value): ?Client
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.id= :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 
 //    /**
 //     * @return Client[] Returns an array of Client objects
@@ -78,7 +91,7 @@ class ClientRepository extends ServiceEntityRepository
    public function findExistingClient($nom, $prenom, $adresse, $codeP,$ville): ?Client
    {
        return $this->createQueryBuilder('c')
-           ->andWhere('c.nom = :nom')
+           ->andwhere('c.nom = :nom')
            ->andWhere('c.prenom = :prenom')
            ->andWhere('c.adresse = :adresse')
            ->andWhere('c.codePostal = :codeP')

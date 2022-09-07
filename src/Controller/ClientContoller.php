@@ -41,8 +41,9 @@ class ClientContoller extends AbstractController
            array_push($result,$user->toJson());
         }
 
-        return new Response(json_encode($result));
+        return new Response(json_encode($result,flags:JSON_INVALID_UTF8_IGNORE));
     }
+
 
     #[Route('/addClient', name: 'app_client_add')]
     public function addNewClient(Request $request){
@@ -56,17 +57,17 @@ class ClientContoller extends AbstractController
 
         if($this->isClientRequestObjectComplete($parsedContent)){
 
-            $clientData = $parsedContent->clientData;
-                $clientName = $clientData->clientName;
-                $clientFirstName =$clientData->clientFirstName;
-                $clientAdresse=$clientData->clientAdresse;
-                $clientVille=$clientData->clientVille;
-                $clientCodeP=$clientData->clientCodeP;
-                $clientSecteur=$clientData->clientSecteur;
+            // $clientData = $parsedContent->clientData;
+                $clientName = $parsedContent->clientName;
+                $clientFirstName =$parsedContent->clientFirstName;
+                $clientAdresse=$parsedContent->clientAdresse;
+                $clientVille=$parsedContent->clientVille;
+                $clientCodeP=$parsedContent->clientCodeP;
+                $clientSecteur=$parsedContent->clientSecteur;
 
-               $clientExist= $clientRepo->findExistingClient( $clientName, $clientFirstName, $clientAdresse, $clientVille,$clientCodeP);
+               $clientExist= $clientRepo->findExistingClient( $clientName, $clientFirstName, $clientAdresse,$clientCodeP, $clientVille);
     
-               if(isNull($clientExist)){
+               if(!isset($clientExist) && isNull($clientExist)){
 
                 $secteurRepo = new SecteurRepository(($this->managerRegistry));
 
@@ -84,40 +85,27 @@ class ClientContoller extends AbstractController
 
                    $clientRepo->add($newClient,true);
           
-
-                   return new Response(json_encode($newClient->toJson()));
+                   return new Response(json_encode($newClient->toJson(),flags:JSON_INVALID_UTF8_IGNORE));
 
                 }else{
-                    return new Response("fail-secteur");
+                    return new Response("fail secteur");
                 }
 
                }
-
-               return new Response("fail-alreadyexist");
+               return new Response(json_encode($clientExist->toJson(),flags:JSON_INVALID_UTF8_IGNORE));
         }
-        $test = $this->isClientRequestObjectComplete($parsedContent);
-        return new Response(json_encode(["test"=>$test]));
+    
+        return new Response("fail total");
 
     }
     
 
-    // const clientData = {
-    //     clientName,
-    //     clientFirstName,
-    //     clientAdresse,
-    //     clientVille,
-    //     clientCodeP,
-    //     clientSecteur,
-    // };
-
- 
-
-
-    private function isClientRequestObjectComplete($parsedContent){
+    public function isClientRequestObjectComplete($parsedContent){
 
             $result =false;
 
-            $clientData = $parsedContent->clientData;
+            $clientData = $parsedContent;
+            // $clientData = $parsedContent->clientData;
 
             if(isset($clientData->clientName)
             &&isset($clientData->clientFirstName)
@@ -126,22 +114,22 @@ class ClientContoller extends AbstractController
             &&isset($clientData->clientCodeP)
             &&isset( $clientData->clientSecteur)
             ){
-                // $clientName = $clientData->clientName;
-                // $clientFirstName =$clientData->clientFirstName;
-                // $clientAdresse=$clientData->clientAdresse;
-                // $clientVille=$clientData->clientVille;
-                // $clientCodeP=$clientData->clientCodeP;
-                // $clientSecteur=$clientData->clientSecteur;
+                $clientName = $clientData->clientName;
+                $clientFirstName =$clientData->clientFirstName;
+                $clientAdresse=$clientData->clientAdresse;
+                $clientVille=$clientData->clientVille;
+                $clientCodeP=$clientData->clientCodeP;
+                $clientSecteur=$clientData->clientSecteur;
 
-                // if( $clientName!=="" && !isNull( $clientName) &&
-                // $clientFirstName!==""&& !isNull(  $clientFirstName) &&
-                // $clientAdresse!==""&& !isNull( $clientAdresse) &&
-                // $clientVille!=""&& !isNull(  $clientVille) &&
-                // $clientCodeP!==""&& !isNull(    $clientCodeP) &&
-                // $clientSecteur!==0 && !isNull( $clientSecteur) 
-                // ){
+                if( $clientName!=="" && 
+                $clientFirstName!==""&& 
+                $clientAdresse!==""&& 
+                $clientVille!=""&& 
+                $clientCodeP!==""&& 
+                $clientSecteur!==0 
+                ){
                     $result = true;
-                //}
+                }
 
             }
 
