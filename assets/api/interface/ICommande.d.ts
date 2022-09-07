@@ -8,6 +8,6 @@ export interface ICommande {
     date_creation: Date;
     date_livraison: Date;
     quantite: number;
-    statut: string;
+    statut: "En Attente" | "Livrée" | "En Livraison" | "Annulé";
     type: string;
 }

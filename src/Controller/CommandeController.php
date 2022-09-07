@@ -82,4 +82,24 @@ class CommandeController extends AbstractController
 
         return new Response("bad object");
     }
+
+
+
+    #[Route('/getAllCommand', name: 'app_commande_getAll')]
+    public function getAllCommand(Request $request){
+
+        $commandRepo = new CommandeRepository($this->manager);
+
+        $allOrders = $commandRepo->findAll();
+
+        $result = [];
+
+        foreach($allOrders as $order){
+            array_push($result, $order->toJson());
+        }
+
+        return new Response(json_encode(($result)));
+
+    }
+
 }

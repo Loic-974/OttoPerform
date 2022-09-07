@@ -30,6 +30,7 @@ const StyledMainContainer = styled(Container)<{ $isDisplayMenu: any }>`
     width: 100%;
     padding-left: ${(props) => (props.$isDisplayMenu ? "min(30px, 2vw)" : 0)};
     height: 100%;
+    overflow-y: auto;
     max-width: 100%;
     box-sizing: border-box;
     font-family: ${({ theme }) => theme.typography.fontFamily};
