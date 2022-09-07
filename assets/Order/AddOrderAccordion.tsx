@@ -74,7 +74,7 @@ export const AddOrderAccordion = ({}: {}) => {
             );
             setClientVille(villeOption ? villeOption : null);
             setClientCodeP(existingClient?.codePostal);
-            setClientSecteur(existingClient?.secteur);
+            setClientSecteur(existingClient?.secteur.id);
         }
     }, [existingClient]);
 

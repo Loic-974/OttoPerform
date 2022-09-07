@@ -155,7 +155,7 @@ class Commande
             "produit"=>$this->getIdProduit()->toJson(),
             "date_creation"=>$this->getDateCreation(),
             "date_livraison"=>$this->getDateLivraison(),
-            "quanite"=>$this->getQuantite(),
+            "quantite"=>$this->getQuantite(),
             "statut"=>$this->getStatut(),
             "type"=>$this->getType(),
        ];

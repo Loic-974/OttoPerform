@@ -5,6 +5,8 @@ import { OrderImportAccordion } from "./OrderImportAccordion";
 import { AddOrderAccordion } from "./AddOrderAccordion";
 
 export const OrderView = ({}: {}) => {
+    // Add asyncCall for data
+
     return (
         <StyledOrderContainer>
             <StyledOrderGridContainer container>

@@ -1,3 +1,4 @@
+import { ISecteur } from "./ISecteur";
 export interface IClient {
     id: number;
     nom: string;
@@ -5,5 +6,5 @@ export interface IClient {
     adresse: string;
     codePostal: string;
     ville: string;
-    secteur: number;
+    secteur: ISecteur;
 }
