@@ -15,27 +15,55 @@ import styled from "styled-components";
 import { AsyncAutoComplete } from "./lib/AsyncAutoComplete";
 import axios from "axios";
 import { IClient } from "../api/interface/IClient";
+import { DUMMY_API_CITY_GOUV } from "../api/DUMMY_API_CITY_GOUV";
+
+interface IVilleOption {
+    label: string;
+    codePostaux: string[];
+}
+
+export interface ISelectOption {
+    label: string;
+    value: number;
+}
 
 export const AddOrderAccordion = ({}: {}) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const [existingClient, setExistingClient] = useState<IClient>();
 
-    const [clientName, setClientName] = useState("");
-    const [clientFirstName, setClientFirstName] = useState("");
-    const [clientAdresse, setClientAdresse] = useState("");
-    const [clientVille, setClientVille] = useState("");
-    const [clientCodeP, setClientCodeP] = useState("");
-    const [clientSecteur, setClientSecteur] = useState();
+    const [clientName, setClientName] = useState<string>("");
+    const [clientFirstName, setClientFirstName] = useState<string>("");
+    const [clientAdresse, setClientAdresse] = useState<string>("");
+    const [clientVille, setClientVille] = useState<IVilleOption | null>(null);
+    const [clientCodeP, setClientCodeP] = useState<string | null>("");
+    const [clientSecteur, setClientSecteur] = useState<ISelectOption | null>(
+        null
+    );
+
+    const cityOptions: IVilleOption[] = DUMMY_API_CITY_GOUV.map((item) => ({
+        label: item.nom,
+        codePostaux: item.codesPostaux,
+    }));
+
+    const codePostalOptions = React.useMemo(
+        () => clientVille?.codePostaux || [],
+        [clientVille]
+    );
 
     React.useEffect(() => {
         if (existingClient) {
             setClientName(existingClient?.nom);
             setClientFirstName(existingClient?.prenom);
             setClientAdresse(existingClient?.adresse);
-            setClientVille(existingClient?.ville);
+
+            const villeOption = cityOptions.find(
+                (item) => item.label === existingClient?.ville
+            );
+            setClientVille(villeOption ? villeOption : null);
+
             setClientCodeP(existingClient?.codePostal);
-            //   setClientSecteur(existingClient?.secteur);
+            //setClientSecteur(existingClient?.secteur);
         }
     }, [existingClient]);
 
@@ -143,18 +171,15 @@ export const AddOrderAccordion = ({}: {}) => {
                         </StyledGridItem>
                         <StyledGridItem item xs={2}>
                             <StyledAutoComplete
-                                disablePortal
                                 disabled={!!existingClient}
                                 freeSolo
                                 id="comboVille"
-                                options={[
-                                    { label: "toto", id: 1, secteur: "xd" },
-                                    { label: "alfred", id: 2, secteur: "xd" },
-                                ]}
-                                // value={clientVille}
-                                // getOptionLabel={(option)=>option.label}
-                                // onChange={(event,value)=>setClientVille(value)}
-
+                                options={cityOptions}
+                                getOptionLabel={(option: any) => option?.label}
+                                value={clientVille}
+                                onChange={(event, value) =>
+                                    setClientVille(value as IVilleOption)
+                                }
                                 renderInput={(params) => (
                                     <StyledTextField
                                         {...params}
@@ -169,17 +194,35 @@ export const AddOrderAccordion = ({}: {}) => {
                         <StyledGridItem item xs={2}>
                             <StyledTextField
                                 fullWidth
-                                disabled={!!existingClient}
-                                required
-                                id="codeP"
+                                id="filled-select-currency"
+                                select
                                 label="Code Postal"
+                                //   value={currency}
+                                //   onChange={handleChange}
+                                value={clientCodeP}
                                 variant="outlined"
                                 size="small"
-                                value={clientCodeP}
                                 onChange={(event) =>
                                     setClientCodeP(event.target.value)
                                 }
-                            />
+                                disabled={
+                                    !codePostalOptions.length ||
+                                    !!existingClient
+                                }
+                            >
+                                {codePostalOptions?.map((item) => (
+                                    <MenuItem key={item} value={item}>
+                                        {item}
+                                    </MenuItem>
+                                ))}
+                                {/* <MenuItem value={0}>Pas d'option</MenuItem> */}
+                                {/* {!codePostalOptions.length ||
+                                    (!codePostalOptions && (
+                                        <MenuItem value={0}>
+                                            Pas d'option
+                                        </MenuItem>
+                                    ))} */}
+                            </StyledTextField>
                         </StyledGridItem>
                         <StyledGridItem item xs={2}>
                             <StyledTextField
@@ -190,7 +233,6 @@ export const AddOrderAccordion = ({}: {}) => {
                                 label="Secteur"
                                 //   value={currency}
                                 //   onChange={handleChange}
-
                                 variant="outlined"
                                 size="small"
                             >
@@ -215,12 +257,13 @@ export const AddOrderAccordion = ({}: {}) => {
                                 variant="outlined"
                                 size="small"
                             >
-                                {/* <MenuItem
-                                    key={option.value}
-                                    value={option.value}
-                                >
-                                    {option.label}
-                                </MenuItem> */}
+                                <MenuItem value={"Dotation"}>Dotation</MenuItem>
+                                <MenuItem value={"Remplacement"}>
+                                    Remplacement
+                                </MenuItem>
+                                <MenuItem value={"Maintenance"}>
+                                    Maintenance
+                                </MenuItem>
                             </StyledTextField>
                         </StyledGridItem>
                         <StyledGridItem item xs={2}>
@@ -233,12 +276,9 @@ export const AddOrderAccordion = ({}: {}) => {
                                 variant="outlined"
                                 size="small"
                             >
-                                {/* <MenuItem
-                                    key={option.value}
-                                    value={option.value}
-                                >
-                                    {option.label}
-                                </MenuItem> */}
+                                <MenuItem value={10}>Ten</MenuItem>
+                                <MenuItem value={20}>Twenty</MenuItem>
+                                <MenuItem value={30}>Thirty</MenuItem>
                             </StyledTextField>
                         </StyledGridItem>
                         <StyledGridItem item xs={2}>
@@ -249,6 +289,7 @@ export const AddOrderAccordion = ({}: {}) => {
                                 label="Quantité"
                                 variant="outlined"
                                 size="small"
+                                type="number"
                             />
                         </StyledGridItem>
                         <StyledGridItem item xs={6} justifySelf={"self-end"}>
