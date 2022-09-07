@@ -13,9 +13,37 @@ import {
 import { useState } from "react";
 import styled from "styled-components";
 import { AsyncAutoComplete } from "./lib/AsyncAutoComplete";
+import axios from "axios";
+import { IClient } from "../api/interface/IClient";
 
 export const AddOrderAccordion = ({}: {}) => {
     const [isOpen, setIsOpen] = useState(false);
+
+    const [existingClient, setExistingClient] = useState<IClient>();
+
+    const [clientName, setClientName] = useState("");
+    const [clientFirstName, setClientFirstName] = useState("");
+    const [clientAdresse, setClientAdresse] = useState("");
+    const [clientVille, setClientVille] = useState("");
+    const [clientCodeP, setClientCodeP] = useState("");
+    const [clientSecteur, setClientSecteur] = useState();
+
+    React.useEffect(() => {
+        if (existingClient) {
+            setClientName(existingClient?.nom);
+            setClientFirstName(existingClient?.prenom);
+            setClientAdresse(existingClient?.adresse);
+            setClientVille(existingClient?.ville);
+            setClientCodeP(existingClient?.codePostal);
+            //   setClientSecteur(existingClient?.secteur);
+        }
+    }, [existingClient]);
+
+    async function getAllClientList() {
+        const query = await axios.get<IClient[]>("/client/clientList");
+        const data = query.data;
+        return data;
+    }
 
     return (
         <Accordion
@@ -57,75 +85,103 @@ export const AddOrderAccordion = ({}: {}) => {
                                 />
                             )}
                         /> */}
-                        <StyledAutoComplete
+                        <StyledAsyncAutoComplete
                             label="Recherche Client Existant"
-                            getDataFn={() => []}
+                            getDataFn={getAllClientList}
+                            formatDataToOptionFn={clientToOption}
+                            setterFn={setExistingClient}
                         />
                     </StyledGridAutoContainer>
                     <StyledGridTitle item xs={12}>
                         <p>Client</p>
                     </StyledGridTitle>
                     <StyledGridItemContainer item xs={12}>
-                        <Grid item xs={2}>
+                        <StyledGridItem item xs={2}>
                             <StyledTextField
                                 fullWidth
+                                disabled={!!existingClient}
                                 required
                                 id="clientName"
                                 label="Nom Client"
                                 variant="outlined"
                                 size="small"
+                                value={clientName}
+                                onChange={(event) =>
+                                    setClientName(event.target.value)
+                                }
                             />
-                        </Grid>
-                        <Grid item xs={2}>
+                        </StyledGridItem>
+                        <StyledGridItem item xs={2}>
                             <StyledTextField
                                 fullWidth
+                                disabled={!!existingClient}
                                 required
                                 id="clienFirst"
                                 label="Prenom Client"
                                 variant="outlined"
                                 size="small"
+                                value={clientFirstName}
+                                onChange={(event) =>
+                                    setClientFirstName(event.target.value)
+                                }
                             />
-                        </Grid>
-                        <Grid item xs={2}>
+                        </StyledGridItem>
+                        <StyledGridItem item xs={2}>
                             <StyledTextField
                                 fullWidth
                                 required
+                                disabled={!!existingClient}
                                 id="clientAdresse"
                                 label="Adresse"
                                 variant="outlined"
                                 size="small"
+                                value={clientAdresse}
+                                onChange={(event) =>
+                                    setClientAdresse(event.target.value)
+                                }
                             />
-                        </Grid>
-                        <Grid item xs={2}>
-                            <StyledTextField
-                                fullWidth
-                                required
-                                id="codeP"
-                                label="Code Postal"
-                                variant="outlined"
-                                size="small"
-                            />
-                        </Grid>
-                        <Grid item xs={2}>
-                            <Autocomplete
+                        </StyledGridItem>
+                        <StyledGridItem item xs={2}>
+                            <StyledAutoComplete
                                 disablePortal
+                                disabled={!!existingClient}
+                                freeSolo
                                 id="comboVille"
                                 options={[
                                     { label: "toto", id: 1, secteur: "xd" },
                                     { label: "alfred", id: 2, secteur: "xd" },
                                 ]}
-                                sx={{ width: 300 }}
+                                // value={clientVille}
+                                // getOptionLabel={(option)=>option.label}
+                                // onChange={(event,value)=>setClientVille(value)}
+
                                 renderInput={(params) => (
                                     <StyledTextField
                                         {...params}
                                         label="Ville"
                                         size="small"
                                         fullWidth
+                                        required
                                     />
                                 )}
                             />
-                        </Grid>
-                        <Grid item xs={2}>
+                        </StyledGridItem>
+                        <StyledGridItem item xs={2}>
+                            <StyledTextField
+                                fullWidth
+                                disabled={!!existingClient}
+                                required
+                                id="codeP"
+                                label="Code Postal"
+                                variant="outlined"
+                                size="small"
+                                value={clientCodeP}
+                                onChange={(event) =>
+                                    setClientCodeP(event.target.value)
+                                }
+                            />
+                        </StyledGridItem>
+                        <StyledGridItem item xs={2}>
                             <StyledTextField
                                 fullWidth
                                 id="filled-select-currency"
@@ -142,14 +198,14 @@ export const AddOrderAccordion = ({}: {}) => {
                                 <MenuItem value={20}>Twenty</MenuItem>
                                 <MenuItem value={30}>Thirty</MenuItem>
                             </StyledTextField>
-                        </Grid>
+                        </StyledGridItem>
                     </StyledGridItemContainer>
 
                     <StyledGridTitle item xs={12}>
                         <p> Commande</p>
                     </StyledGridTitle>
                     <StyledGridItemContainer item xs={12}>
-                        <Grid item xs={2}>
+                        <StyledGridItem item xs={2}>
                             <StyledTextField
                                 fullWidth
                                 required
@@ -166,8 +222,8 @@ export const AddOrderAccordion = ({}: {}) => {
                                     {option.label}
                                 </MenuItem> */}
                             </StyledTextField>
-                        </Grid>
-                        <Grid item xs={2}>
+                        </StyledGridItem>
+                        <StyledGridItem item xs={2}>
                             <StyledTextField
                                 fullWidth
                                 required
@@ -184,8 +240,8 @@ export const AddOrderAccordion = ({}: {}) => {
                                     {option.label}
                                 </MenuItem> */}
                             </StyledTextField>
-                        </Grid>
-                        <Grid item xs={2}>
+                        </StyledGridItem>
+                        <StyledGridItem item xs={2}>
                             <StyledTextField
                                 fullWidth
                                 required
@@ -194,15 +250,15 @@ export const AddOrderAccordion = ({}: {}) => {
                                 variant="outlined"
                                 size="small"
                             />
-                        </Grid>
-                        <Grid item xs={6} justifySelf={"self-end"}>
+                        </StyledGridItem>
+                        <StyledGridItem item xs={6} justifySelf={"self-end"}>
                             <StyledButton
                                 variant="contained"
-                                onClick={() => console.log("todo")}
+                                onClick={() => getAllClientList()}
                             >
                                 Ajouter la commande
                             </StyledButton>
-                        </Grid>
+                        </StyledGridItem>
                     </StyledGridItemContainer>
                 </Grid>
             </AccordionDetails>
@@ -213,6 +269,10 @@ export const AddOrderAccordion = ({}: {}) => {
 // -------------------------------------------------------------------------------------------------------------------- //
 //---------------------------------------------------- Style ----------------------------------------------------------- //
 // -------------------------------------------------------------------------------------------------------------------- //
+
+function clientToOption(user: IClient) {
+    return `${user.nom} ${user.prenom} ${user.adresse} ${user.ville} ${user.codePostal}`;
+}
 
 const StyledAccordionSummary = styled(AccordionSummary)`
     background-color: ${({ theme }) => theme.colors.darkGrey};
@@ -233,6 +293,8 @@ const StyledGridItemContainer = styled(Grid)`
     width: 100%;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
+    padding: 0 24px;
 `;
 
 const StyledGridAutoContainer = styled(StyledGridItemContainer)`
@@ -240,6 +302,12 @@ const StyledGridAutoContainer = styled(StyledGridItemContainer)`
     .MuiTouchRipple-root {
         display: none;
     }
+`;
+
+const StyledGridItem = styled(Grid)`
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `;
 
 const StyledGridTitle = styled(Grid)`
@@ -262,7 +330,18 @@ const StyledTextField = styled(TextField)`
     width: 80%;
 `;
 
-const StyledAutoComplete = styled(AsyncAutoComplete)`
+const StyledAutoComplete = styled(Autocomplete)`
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    .MuiAutocomplete-root {
+        width: 100%;
+    }
+    .MuiFormControl-root.MuiTextField-root {
+        width: 80%;
+    }
+`;
+const StyledAsyncAutoComplete = styled(AsyncAutoComplete)`
     width: 80%;
     .MuiAutocomplete-root {
         width: 80%;

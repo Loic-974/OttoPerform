@@ -12,13 +12,18 @@ function sleep(delay = 0) {
 
 export const AsyncAutoComplete = <T extends {}>({
     label,
+    formatDataToOptionFn,
     getDataFn,
+    setterFn,
 }: {
     label: string;
-    getDataFn: () => T[];
+    getDataFn: () => Promise<T[]>;
+    formatDataToOptionFn: (option: any) => string;
+    setterFn?: (arg: any) => void;
 }) => {
     const [open, setOpen] = React.useState(false);
-    const [options, setOptions] = React.useState<readonly T[]>([]);
+    const [options, setOptions] = React.useState<T[]>([]);
+    const [value, setValue] = React.useState({});
 
     const loading = React.useMemo(
         () => open && !options.length,
@@ -69,9 +74,10 @@ export const AsyncAutoComplete = <T extends {}>({
             // isOptionEqualToValue={(option, value) =>
             //     option.title === value.title
             // }
-            // getOptionLabel={(option) => option.}
+            getOptionLabel={(option) => formatDataToOptionFn(option as T)}
             options={options}
             loading={loading}
+            onChange={(event, value) => setterFn?.(value as T)}
             renderInput={(params) => (
                 <TextField
                     {...params}
