@@ -139,4 +139,14 @@ class Produit
         return $this;
     }
 
+
+    public function toJson(){
+
+        return[
+            "id"=>$this->getId(),
+            "nom" => $this->getNom(),
+            "prix" => $this->getPrix(),
+            "marge" => $this->getMarge(),
+        ];
+    }
 }

@@ -83,6 +83,7 @@ export const AsyncAutoComplete = <T extends {}>({
                     {...params}
                     label={label}
                     fullWidth
+                    size="small"
                     InputProps={{
                         ...params.InputProps,
                         endAdornment: (

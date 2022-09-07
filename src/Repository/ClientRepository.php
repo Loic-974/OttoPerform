@@ -58,13 +58,38 @@ class ClientRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Client
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    /**
+     * Find a Client by Field Name
+     * @param string $field
+     * @param string $value
+     * @return Client|null
+     */
+   public function findOneClientByField($field,$value): ?Client
+   {
+       return $this->createQueryBuilder('c')
+           ->andWhere($field = ':val')
+           ->setParameter('val', $value)
+           ->getQuery()
+           ->getOneOrNullResult()
+       ;
+   }
+
+
+   public function findExistingClient($nom, $prenom, $adresse, $codeP,$ville): ?Client
+   {
+       return $this->createQueryBuilder('c')
+           ->andWhere('c.nom = :nom')
+           ->andWhere('c.prenom = :prenom')
+           ->andWhere('c.adresse = :adresse')
+           ->andWhere('c.codePostal = :codeP')
+           ->andWhere('c.ville = :ville')
+           ->setParameter('nom', $nom)
+           ->setParameter('prenom', $prenom)
+           ->setParameter('adresse', $adresse)
+           ->setParameter('codeP', $codeP)
+           ->setParameter('ville', $ville)
+           ->getQuery()
+           ->getOneOrNullResult()
+       ;
+   }
 }

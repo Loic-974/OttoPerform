@@ -16,6 +16,7 @@ import { AsyncAutoComplete } from "./lib/AsyncAutoComplete";
 import axios from "axios";
 import { IClient } from "../api/interface/IClient";
 import { DUMMY_API_CITY_GOUV } from "../api/DUMMY_API_CITY_GOUV";
+import { IProduct } from "../api/interface/IProduct";
 
 interface IVilleOption {
     label: string;
@@ -33,12 +34,22 @@ export const AddOrderAccordion = ({}: {}) => {
 
     const [existingClient, setExistingClient] = useState<IClient>();
 
+    // ----------------------------- CLIENT STATE --------------------------- //
+
     const [clientName, setClientName] = useState<string>("");
     const [clientFirstName, setClientFirstName] = useState<string>("");
     const [clientAdresse, setClientAdresse] = useState<string>("");
     const [clientVille, setClientVille] = useState<IVilleOption | null>(null);
     const [clientCodeP, setClientCodeP] = useState<string | null>("");
     const [clientSecteur, setClientSecteur] = useState<number>(0);
+
+    // ----------------------------- ORDER STATE --------------------------- //
+
+    const [orderType, setOrderType] = useState("");
+    const [orderProduct, setOrderProduct] = useState<IProduct>();
+    const [orderQte, setOrderQte] = useState(0);
+
+    // ---------------------------- OPTIONS SELECT ------------------------- //
 
     const cityOptions: IVilleOption[] = DUMMY_API_CITY_GOUV.map((item) => ({
         label: item.nom,
@@ -51,6 +62,7 @@ export const AddOrderAccordion = ({}: {}) => {
         [clientVille]
     );
 
+    // --------------------------- UseEffect ------------------------------ //
     React.useEffect(() => {
         if (existingClient) {
             setClientName(existingClient?.nom);
@@ -72,12 +84,47 @@ export const AddOrderAccordion = ({}: {}) => {
         }
     }, [clientVille]);
 
-    async function getAllClientList() {
-        const query = await axios.get<IClient[]>("/client/clientList");
-        const data = query.data;
-        return data;
+    // ------------------------------- Methods ---------------------------------- //
+
+    async function handleAddCommand() {}
+
+    async function addNewCommand() {
+        const clientData = {
+            clientName,
+            clientFirstName,
+            clientAdresse,
+            clientVille: clientVille?.label,
+            clientCodeP,
+            clientSecteur,
+        };
+
+        const orderData = {
+            orderType,
+            orderProductId: orderProduct?.id,
+            orderQte,
+        };
+
+        const orderGlobalData = { clientData, orderData };
+
+        axios.post("", orderGlobalData);
     }
 
+    async function test() {
+        const clientData = {
+            clientName,
+            clientFirstName,
+            clientAdresse,
+            clientVille: clientVille?.label,
+            clientCodeP,
+            clientSecteur,
+        };
+
+        axios.post("/client/addClient", { clientData });
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------- //
+    //---------------------------------------------------- Template ------------------------------------------------------- //
+    // -------------------------------------------------------------------------------------------------------------------- //
     return (
         <Accordion
             expanded={isOpen}
@@ -95,29 +142,6 @@ export const AddOrderAccordion = ({}: {}) => {
                         <p>Client Existant</p>
                     </StyledGridTitle>
                     <StyledGridAutoContainer item xs={12}>
-                        {/* <StyledAutoComplete
-                            fullWidth
-                            freeSolo
-                            // disablePortal
-                            id="combo-box-demo"
-                            options={[
-                                { label: "toto", id: 1 },
-                                { label: "alfred", id: 2 },
-                            ]}
-                            // sx={{ width: 300 }}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label="Recherche Client Existant"
-                                    size="small"
-                                    fullWidth
-                                    InputProps={{
-                                        // ...params.InputProps,
-                                        type: "search",
-                                    }}
-                                />
-                            )}
-                        /> */}
                         <StyledAsyncAutoComplete
                             label="Recherche Client Existant"
                             getDataFn={getAllClientList}
@@ -202,8 +226,6 @@ export const AddOrderAccordion = ({}: {}) => {
                                 id="filled-select-currency"
                                 select
                                 label="Code Postal"
-                                //   value={currency}
-                                //   onChange={handleChange}
                                 value={clientCodeP}
                                 variant="outlined"
                                 size="small"
@@ -220,13 +242,6 @@ export const AddOrderAccordion = ({}: {}) => {
                                         {item}
                                     </MenuItem>
                                 ))}
-                                {/* <MenuItem value={0}>Pas d'option</MenuItem> */}
-                                {/* {!codePostalOptions.length ||
-                                    (!codePostalOptions && (
-                                        <MenuItem value={0}>
-                                            Pas d'option
-                                        </MenuItem>
-                                    ))} */}
                             </StyledTextField>
                         </StyledGridItem>
                         <StyledGridItem item xs={2}>
@@ -238,7 +253,6 @@ export const AddOrderAccordion = ({}: {}) => {
                                 label="Secteur"
                                 placeholder="Secteur"
                                 value={clientSecteur}
-                                //   onChange={handleChange}
                                 variant="outlined"
                                 size="small"
                             >
@@ -264,6 +278,10 @@ export const AddOrderAccordion = ({}: {}) => {
                                 label="Type Commande"
                                 variant="outlined"
                                 size="small"
+                                value={orderType}
+                                onChange={(event) =>
+                                    setOrderType(event.target.value)
+                                }
                             >
                                 <MenuItem value={"Dotation"}>Dotation</MenuItem>
                                 <MenuItem value={"Remplacement"}>
@@ -275,19 +293,12 @@ export const AddOrderAccordion = ({}: {}) => {
                             </StyledTextField>
                         </StyledGridItem>
                         <StyledGridItem item xs={2}>
-                            <StyledTextField
-                                fullWidth
-                                required
-                                select
-                                id="product"
-                                label="Produit"
-                                variant="outlined"
-                                size="small"
-                            >
-                                <MenuItem value={10}>Ten</MenuItem>
-                                <MenuItem value={20}>Twenty</MenuItem>
-                                <MenuItem value={30}>Thirty</MenuItem>
-                            </StyledTextField>
+                            <StyledAsyncAutoComplete
+                                label="Produit Disponible"
+                                getDataFn={getAllProduct}
+                                formatDataToOptionFn={productToOption}
+                                setterFn={setOrderProduct}
+                            />
                         </StyledGridItem>
                         <StyledGridItem item xs={2}>
                             <StyledTextField
@@ -298,12 +309,16 @@ export const AddOrderAccordion = ({}: {}) => {
                                 variant="outlined"
                                 size="small"
                                 type="number"
+                                value={orderQte}
+                                onChange={(event) =>
+                                    setOrderQte(parseInt(event.target.value))
+                                }
                             />
                         </StyledGridItem>
                         <StyledGridItem item xs={6} justifySelf={"self-end"}>
                             <StyledButton
                                 variant="contained"
-                                onClick={() => getAllClientList()}
+                                onClick={() => test()}
                             >
                                 Ajouter la commande
                             </StyledButton>
@@ -316,12 +331,32 @@ export const AddOrderAccordion = ({}: {}) => {
 };
 
 // -------------------------------------------------------------------------------------------------------------------- //
-//---------------------------------------------------- Style ----------------------------------------------------------- //
+//---------------------------------------------------- Helper ----------------------------------------------------------- //
 // -------------------------------------------------------------------------------------------------------------------- //
 
 function clientToOption(user: IClient) {
     return `${user.nom} ${user.prenom} ${user.adresse} ${user.ville} ${user.codePostal}`;
 }
+
+function productToOption(produit: IProduct) {
+    return produit.nom;
+}
+
+async function getAllClientList() {
+    const query = await axios.get<IClient[]>("/client/clientList");
+    const data = query.data;
+    return data;
+}
+
+async function getAllProduct() {
+    const query = await axios.get<IProduct[]>("/product/getProductList");
+    const data = query.data;
+    return data;
+}
+
+// -------------------------------------------------------------------------------------------------------------------- //
+//---------------------------------------------------- Style ----------------------------------------------------------- //
+// -------------------------------------------------------------------------------------------------------------------- //
 
 const StyledAccordionSummary = styled(AccordionSummary)`
     background-color: ${({ theme }) => theme.colors.darkGrey};
