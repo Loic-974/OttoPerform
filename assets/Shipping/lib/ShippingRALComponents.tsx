@@ -17,8 +17,7 @@ export const DetailsRalComponent = ({
         <>
             {Object.entries(groupedByRal).map(([key, value], index) => (
                 <div key={"key" + index}>
-                    <p>{key}</p>
-                    <p>{value?.length || 0}</p>
+                    <p>{`${key} : ${value?.length || 0} `}</p>
                 </div>
             ))}
         </>

@@ -30,26 +30,25 @@ export const ShippingView = ({}: {}) => {
     return (
         <StyledShippedContainer>
             <StyledGridContainer container>
-                <StyledGridCardContainer item xs={12}>
-                    <ShippingCardPart
-                        awaitingShippingOrderData={
-                            awaitingShippingOrderData.value
-                                ? awaitingShippingOrderData.value
-                                : []
-                        }
-                        shippingOrderData={
-                            shippingOrderData.value
-                                ? shippingOrderData.value
-                                : []
-                        }
-                        shippingData={
-                            shippingData.value ? shippingData.value : []
-                        }
-                    />
-                </StyledGridCardContainer>
-                <StyledGridProgramContainer item xs={12}>
-                    <ShippingProgramPart />
-                </StyledGridProgramContainer>
+                <ShippingCardPart
+                    awaitingShippingOrderData={
+                        awaitingShippingOrderData.value
+                            ? awaitingShippingOrderData.value
+                            : []
+                    }
+                    shippingOrderData={
+                        shippingOrderData.value ? shippingOrderData.value : []
+                    }
+                    shippingData={shippingData.value ? shippingData.value : []}
+                />
+
+                <ShippingProgramPart
+                    awaitingShippingOrderData={
+                        awaitingShippingOrderData.value
+                            ? awaitingShippingOrderData.value
+                            : []
+                    }
+                />
             </StyledGridContainer>
         </StyledShippedContainer>
     );
@@ -91,30 +90,30 @@ async function getAllShipping() {
 
 const StyledShippedContainer = styled.div`
     width: 100%;
-    min-height: 100%;
+    height: 100%;
+
     padding: 12px;
     box-sizing: border-box;
     background-color: ${({ theme }) => theme.colors.mediumGrey};
 `;
 
 const StyledGridContainer = styled(Grid)`
-    display: flex;
+    /* display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between; */
+    box-sizing: border-box;
     width: 100%;
+    height: 100%;
 `;
 
 const StyledGridCardContainer = styled(Grid)`
     width: 100%;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-around;
-    flex: 1;
-`;
-const StyledGridProgramContainer = styled(Grid)`
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    flex: 2;
+    /* flex: 1; */
+    padding-bottom: 12px;
+    border-bottom: 2px solid ${({ theme }) => theme.colors.darkGrey};
+    max-height: 33%;
 `;

@@ -60,7 +60,7 @@ export function TransfertListOrder() {
     };
 
     const customList = (items: readonly number[]) => (
-        <Paper sx={{ width: 200, height: 230, overflow: "auto" }}>
+        <div>
             <List dense component="div" role="list">
                 {items.map((value: number) => {
                     const labelId = `transfer-list-item-${value}-label`;
@@ -91,11 +91,18 @@ export function TransfertListOrder() {
                 })}
                 <ListItem />
             </List>
-        </Paper>
+        </div>
     );
 
     return (
-        <Grid container spacing={2} justifyContent="center" alignItems="center">
+        <Grid
+            container
+            item
+            xs={12}
+            spacing={2}
+            justifyContent="center"
+            alignItems="center"
+        >
             <Grid item>{customList(left)}</Grid>
             <Grid item>
                 <Grid container direction="column" alignItems="center">

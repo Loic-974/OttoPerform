@@ -20,7 +20,7 @@ export const ShippingCardPart = ({
     shippingData: ILivraison[];
 }) => {
     return (
-        <>
+        <StyledGridCardContainer container item xs={12}>
             <StyledGridItem item xs={3}>
                 <ShippingCard title="Reste à livrer">
                     <DetailsRalComponent
@@ -56,19 +56,24 @@ export const ShippingCardPart = ({
             <StyledGridItem item xs={3}>
                 <ShippingCard title="Temps moyen de Livraison" />
             </StyledGridItem>
-        </>
+        </StyledGridCardContainer>
     );
 };
 
 const StyledGridCardContainer = styled(Grid)`
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
+    height: 33%;
+    /* display: flex;
+    align-items: stretch;
+    justify-content: space-around; */
+    padding-bottom: 12px;
+    border-bottom: 2px solid ${({ theme }) => theme.colors.darkGrey};
+    /* flex-shrink: 2; */
 `;
 
 const StyledGridItem = styled(Grid)`
     display: flex;
-    align-items: center;
+    height: 100%;
+    /* align-items: center; */
     justify-content: center;
 `;

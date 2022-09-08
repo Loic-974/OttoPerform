@@ -23,7 +23,7 @@ const StyledCard = styled(Card)`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: center;
+    justify-content: flex-start;
 `;
 
 const StyledCardHeader = styled(CardHeader)`

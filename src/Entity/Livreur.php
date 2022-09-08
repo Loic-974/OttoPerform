@@ -111,6 +111,7 @@ class Livreur
             return [
                 "id"=>$this->getId(),
                 "nom"=>$this->getNom(),
+                "prenom"=>$this->getPrenom(),
                 "secteur"=>$this->getIdSecteur()->toJson(),
                 "livraisons"=>array_map(function(Livraison $value) {
                     return $value->toJson();
@@ -120,6 +121,7 @@ class Livreur
         return [
             "id"=>$this->getId(),
             "nom"=>$this->getNom(),
+            "prenom"=>$this->getPrenom(),
             "secteur"=>$this->getIdSecteur()->toJson(),
         ];
         }
