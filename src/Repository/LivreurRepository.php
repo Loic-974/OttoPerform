@@ -39,6 +39,23 @@ class LivreurRepository extends ServiceEntityRepository
         }
     }
 
+
+    /**
+     * Undocumented function
+     *
+     * @param [type] $value
+     * @return Livreur|null
+     */
+    public function findOneLivreurById($value): ?Livreur
+   {
+       return $this->createQueryBuilder('l')
+           ->andWhere('l.id = :val')
+           ->setParameter('val', $value)
+           ->getQuery()
+           ->getOneOrNullResult()
+       ;
+   }
+
 //    /**
 //     * @return Livreur[] Returns an array of Livreur objects
 //     */

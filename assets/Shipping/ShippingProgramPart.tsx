@@ -2,7 +2,7 @@ import { Grid } from "@mui/material";
 import axios from "axios";
 import { Dayjs } from "dayjs";
 import dayjs = require("dayjs");
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import React = require("react");
 import { useAsyncFn } from "react-use";
 import styled from "styled-components";
@@ -24,9 +24,12 @@ export const ShippingProgramPart = ({
 
     const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
 
-    const [scheduleOrder, setScheduleOrder] = useState<ICommande[]>([]);
-
-    console.log(scheduleOrder);
+    // Filter order who have the same secteur than the selected delivery man
+    const filteredShippingOrder = useMemo(() => {
+        return awaitingShippingOrderData.filter(
+            (item) => item.client.secteur.id === selectedDeliveryMan?.secteur.id
+        );
+    }, [selectedDeliveryMan]);
 
     React.useEffect(() => {
         getAllDeliveryMan();
@@ -52,7 +55,7 @@ export const ShippingProgramPart = ({
             <StyledGridItem item xs={6}>
                 {/* {!!selectedDeliveryMan && !!selectDate && ( */}
                 <TransfertListOrder
-                    awaitingData={awaitingShippingOrderData}
+                    awaitingData={filteredShippingOrder}
                     selectedDate={selectedDate}
                     selectedDeliveryMan={selectedDeliveryMan}
                 />

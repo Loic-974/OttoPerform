@@ -11,6 +11,7 @@ import { ICommande } from "../../api/interface/ICommande";
 import { intersectionBy } from "lodash";
 import { Dayjs } from "dayjs";
 import { ILivreur } from "../../api/interface/ILivreur";
+import axios from "axios";
 
 function not(a: ICommande[], b: ICommande[]) {
     return a.filter((value) => b.indexOf(value) === -1);
@@ -36,6 +37,15 @@ export const TransfertListOrder = ({
     React.useEffect(() => setAwaitingOrder(awaitingData), [awaitingData]);
 
     const [shippingOrder, setShippingOrder] = React.useState<ICommande[]>([]);
+
+    async function createOrderShipping() {
+        const dataObject = shippingOrder.map((item) => ({
+            livreurId: selectedDeliveryMan?.id,
+            commandeId: item.id,
+        }));
+
+        axios.post("/livraison/setLivraison", dataObject);
+    }
 
     const leftChecked = intersection(checked, awaitingOrder);
     const rightChecked = intersection(checked, shippingOrder);
@@ -100,7 +110,7 @@ export const TransfertListOrder = ({
                             </ListItemIcon>
                             <ListItemText
                                 id={labelId}
-                                primary={`List item ${value.client.nom + 1}`}
+                                primary={`${value.client.nom} ${value.client.prenom}`}
                             />
                         </ListItem>
                     );
@@ -169,7 +179,10 @@ export const TransfertListOrder = ({
                 <Grid item>{customList(shippingOrder)}</Grid>
             </Grid>
             <div>
-                <Button disabled={!shippingOrder.length}>
+                <Button
+                    disabled={!shippingOrder.length}
+                    onClick={() => createOrderShipping()}
+                >
                     Confirmer les Livraisons
                 </Button>
             </div>

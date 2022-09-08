@@ -55,6 +55,22 @@ class CommandeRepository extends ServiceEntityRepository
                ;
     }
 
+        /**
+         * Find one commande by the given id
+         *
+         * @param [type] $value
+         * @return Commande|null
+         */
+        public function findOneCommandeById($value): ?Commande
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.id = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
 //    /**
 //     * @return Commande[] Returns an array of Commande objects
 //     */
