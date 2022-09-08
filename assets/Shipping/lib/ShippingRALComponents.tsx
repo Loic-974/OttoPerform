@@ -1,6 +1,7 @@
 import { groupBy } from "lodash";
 import React = require("react");
 import { ICommande } from "../../api/interface/ICommande";
+import { ILivraison } from "../../api/interface/ILivraison";
 
 export const DetailsRalComponent = ({
     awaitingData,
@@ -34,6 +35,29 @@ export const DetailsRalRateComponent = ({
     const ralRate = React.useMemo(() => {
         return (shippingData.length / awaitingData.length) * 100;
     }, [awaitingData, shippingData]);
+
+    return (
+        <>
+            <p>{ralRate.toFixed(2)}</p>
+        </>
+    );
+};
+
+export const DetailsShippingRateComponent = ({
+    shippingData,
+}: {
+    shippingData: ILivraison[];
+}) => {
+    const ralRate = React.useMemo(() => {
+        const shippedBac = shippingData.reduce(
+            (acc, item) => acc + item.commande.quantite,
+            0
+        );
+        const shipByLivreur = groupBy(shippingData, (item) => item.livreur?.id);
+        const livreurCount = Object.keys(shipByLivreur).length;
+
+        return shippedBac / livreurCount;
+    }, [, shippingData]);
 
     return (
         <>

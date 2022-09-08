@@ -4,19 +4,23 @@ import React = require("react");
 import { useAsyncFn } from "react-use";
 import styled from "styled-components";
 import { ICommande } from "../api/interface/ICommande";
-import { ShippingCard } from "./lib/ShippingCard";
-import {
-    DetailsRalComponent,
-    DetailsRalRateComponent,
-} from "./lib/ShippingRALComponents";
+import { ILivraison } from "../api/interface/ILivraison";
+
+import { ShippingCardPart } from "./ShippingCardPart";
+import { ShippingProgramPart } from "./ShippingProgramPart";
 
 export const ShippingView = ({}: {}) => {
-    const [awaitingShippingData, getAwaitingShippingData] =
+    const [awaitingShippingOrderData, getAwaitingShippingOrderData] =
         useAsyncFn(getAllWaitingOrder);
-    const [shippingData, getShippingData] = useAsyncFn(getAllInShippingOrder);
+    const [shippingOrderData, getShippingOrderData] = useAsyncFn(
+        getAllInShippingOrder
+    );
+
+    const [shippingData, getShippingData] = useAsyncFn(getAllShipping);
 
     React.useEffect(() => {
-        getAwaitingShippingData();
+        getAwaitingShippingOrderData();
+        getShippingOrderData();
         getShippingData();
     }, []);
 
@@ -25,47 +29,35 @@ export const ShippingView = ({}: {}) => {
     // -------------------------------------------------------------------------------------------------------------------- //
     return (
         <StyledShippedContainer>
-            <Grid container>
+            <StyledGridContainer container>
                 <StyledGridCardContainer item xs={12}>
-                    <StyledGridItem item xs={3}>
-                        <ShippingCard title="Reste à livrer">
-                            <DetailsRalComponent
-                                awaitingData={
-                                    awaitingShippingData.value
-                                        ? awaitingShippingData.value
-                                        : []
-                                }
-                            />
-                        </ShippingCard>
-                    </StyledGridItem>
-                    <StyledGridItem item xs={3}>
-                        <ShippingCard title="Livraison Programmée">
-                            <DetailsRalRateComponent
-                                awaitingData={
-                                    awaitingShippingData.value
-                                        ? awaitingShippingData.value
-                                        : []
-                                }
-                                shippingData={
-                                    shippingData.value ? shippingData.value : []
-                                }
-                            />
-                        </ShippingCard>
-                    </StyledGridItem>
-                    <StyledGridItem item xs={3}>
-                        <ShippingCard title="Taux de Livraison" />
-                    </StyledGridItem>
-                    <StyledGridItem item xs={3}>
-                        <ShippingCard title="Temps moyen de Livraison" />
-                    </StyledGridItem>
+                    <ShippingCardPart
+                        awaitingShippingOrderData={
+                            awaitingShippingOrderData.value
+                                ? awaitingShippingOrderData.value
+                                : []
+                        }
+                        shippingOrderData={
+                            shippingOrderData.value
+                                ? shippingOrderData.value
+                                : []
+                        }
+                        shippingData={
+                            shippingData.value ? shippingData.value : []
+                        }
+                    />
                 </StyledGridCardContainer>
-                <Grid item xs={12}>
-                    GEstion Part
-                </Grid>
-            </Grid>
+                <StyledGridProgramContainer item xs={12}>
+                    <ShippingProgramPart />
+                </StyledGridProgramContainer>
+            </StyledGridContainer>
         </StyledShippedContainer>
     );
 };
+
+// -------------------------------------------------------------------------------------------------------------------- //
+//---------------------------------------------------- Private Fn ----------------------------------------------------- //
+// -------------------------------------------------------------------------------------------------------------------- //
 
 async function getAllWaitingOrder() {
     const query = await axios.post<ICommande[]>(
@@ -87,10 +79,16 @@ async function getAllInShippingOrder() {
     const data = query.data;
     return data;
 }
+async function getAllShipping() {
+    const query = await axios.get<ILivraison[]>("/livraison/getlivraison");
+    const data = query.data;
+    return data;
+}
 
 // -------------------------------------------------------------------------------------------------------------------- //
-//---------------------------------------------------- Style ------------------------------------------------------- //
+//---------------------------------------------------- Style ---------------------------------------------------------- //
 // -------------------------------------------------------------------------------------------------------------------- //
+
 const StyledShippedContainer = styled.div`
     width: 100%;
     min-height: 100%;
@@ -99,15 +97,24 @@ const StyledShippedContainer = styled.div`
     background-color: ${({ theme }) => theme.colors.mediumGrey};
 `;
 
+const StyledGridContainer = styled(Grid)`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+`;
+
 const StyledGridCardContainer = styled(Grid)`
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-around;
+    flex: 1;
 `;
-
-const StyledGridItem = styled(Grid)`
+const StyledGridProgramContainer = styled(Grid)`
+    width: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
+    flex: 2;
 `;

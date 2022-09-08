@@ -104,4 +104,30 @@ class Livreur
 
         return $this;
     }
+
+    public function toJson($withShipping=false){
+
+        if($withShipping){
+            return [
+                "id"=>$this->getId(),
+                "nom"=>$this->getNom(),
+                "secteur"=>$this->getIdSecteur()->toJson(),
+                "livraisons"=>array_map(function(Livraison $value) {
+                    return $value->toJson();
+                },iterator_to_array($this->getLivraisons()))
+            ];
+        }else{
+        return [
+            "id"=>$this->getId(),
+            "nom"=>$this->getNom(),
+            "secteur"=>$this->getIdSecteur()->toJson(),
+        ];
+        }
+    }
+
+
+  
+
+
 }
+

@@ -102,4 +102,31 @@ class Livraison
 
         return $this;
     }
+
+    public function toJson($withLivreur=false){
+        if($withLivreur){
+        return [
+            "id"=>$this->getId(),
+            "date_livraison"=>$this->getDateLivraison(),
+            "livreur" =>$this->getIdLivreur()->toJson(),
+            //facture
+            "commande"=>$this->getIdCommande()->toJson(),
+            "shipped_date"=>$this->getShippedDate()
+
+        ];
+        }else{
+            return [
+                "id"=>$this->getId(),
+                "date_livraison"=>$this->getDateLivraison(),
+                //"livreur" =>$this->getIdLivreur()->toJson(),
+                //facture
+                "commande"=>$this->getIdCommande()->toJson(),
+                "shipped_date"=>$this->getShippedDate()
+            ];
+        }
+
+    }
+
 }
+
+
