@@ -1,3 +1,4 @@
+import "regenerator-runtime/runtime";
 import React = require("react");
 import { buildOrderTableColumn } from "./lib/buildOrderTableColumn";
 import { useGlobalFilter, useTable } from "react-table";
@@ -10,8 +11,10 @@ import {
     TableRow,
     TableCell,
     TableBody,
+    Grid,
 } from "@mui/material";
 import styled from "styled-components";
+import { GlobalFilter } from "./lib/GlobalFilterSearch";
 
 export const OrderTable = ({
     unPreparedData,
@@ -24,7 +27,18 @@ export const OrderTable = ({
         [unPreparedData]
     );
 
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+        //@ts-ignore
+        preGlobalFilteredRows,
+        state,
+        //@ts-ignore
+        setGlobalFilter,
+    } =
         //@ts-ignore
         useTable({ columns, data }, useGlobalFilter);
 
@@ -34,7 +48,17 @@ export const OrderTable = ({
 
     return (
         <TableContainer component={Paper}>
-            <StyledTitle>Liste Commandes</StyledTitle>
+            <StyledTitle>Liste des Commandes</StyledTitle>
+            <Grid container>
+                <Grid item xs={5}>
+                    <GlobalFilter
+                        preGlobalFilteredRows={preGlobalFilteredRows}
+                        //@ts-ignore
+                        globalFilter={state.globalFilter}
+                        setGlobalFilter={setGlobalFilter}
+                    />
+                </Grid>
+            </Grid>
             <StyledTable {...getTableProps()}>
                 <TableHead>
                     {
@@ -120,6 +144,8 @@ function prepareData(data: ICommande[]) {
 
 const StyledTable = styled(Table)`
     min-height: 350px;
+    max-height: 500px;
+    overflow-y: auto;
 `;
 
 const StyledTitle = styled.div`
@@ -129,7 +155,7 @@ const StyledTitle = styled.div`
     font-weight: 700;
     background-color: ${({ theme }) => theme.colors.darkOrange};
     color: #fff;
-    margin-bottom: 32px;
+    margin-bottom: 12px;
 `;
 
 const StyledHeader = styled(TableCell)`
@@ -141,6 +167,7 @@ const StyledHeader = styled(TableCell)`
 
 const StyledCell = styled(TableCell)`
     text-align: center;
+    border-bottom: 1px solid ${({ theme }) => theme.colors.mediumGrey};
 `;
 
 const StyledRow = styled(TableRow)`

@@ -23,7 +23,7 @@ export const OrderView = ({}: {}) => {
                     <OrderImportAccordion />
                 </StyledGridItem>
                 <StyledGridItem item xs={12}>
-                    <AddOrderAccordion />
+                    <AddOrderAccordion onSubmitCommand={getOrdersData} />
                 </StyledGridItem>
                 <Grid item xs={12}>
                     <OrderTable

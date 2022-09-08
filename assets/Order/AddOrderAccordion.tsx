@@ -29,7 +29,11 @@ export interface ISelectOption {
     value: number;
 }
 
-export const AddOrderAccordion = ({}: {}) => {
+export const AddOrderAccordion = ({
+    onSubmitCommand,
+}: {
+    onSubmitCommand: () => void;
+}) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const [existingClient, setExistingClient] = useState<IClient>();
@@ -86,8 +90,6 @@ export const AddOrderAccordion = ({}: {}) => {
 
     // ------------------------------- Methods ---------------------------------- //
 
-    async function handleAddCommand() {}
-
     async function addNewCommand() {
         const clientData = {
             clientName,
@@ -104,15 +106,9 @@ export const AddOrderAccordion = ({}: {}) => {
             orderQte,
         };
 
-        // axios.post("/client/addClient", {
-        //     clientName,
-        //     clientFirstName,
-        //     clientAdresse,
-        //     clientVille: clientVille?.label,
-        //     clientCodeP,
-        //     clientSecteur,
-        // });
-        axios.post("/commande/addCommand", { clientData, orderData });
+        await axios.post("/commande/addCommand", { clientData, orderData });
+
+        onSubmitCommand();
     }
 
     // -------------------------------------------------------------------------------------------------------------------- //

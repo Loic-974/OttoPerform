@@ -18,6 +18,7 @@ export const OXXO_COLORS = {
         clearBlue: "#c1f9fc",
         mediumBlue: "#30AFB6",
         darkBlue: "#268D93",
+        mediumGreen: "#057a2c",
     },
 };
 
