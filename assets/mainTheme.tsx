@@ -17,7 +17,7 @@ export const OXXO_COLORS = {
         lightBlue: "#60D8DF",
         clearBlue: "#c1f9fc",
         mediumBlue: "#30AFB6",
-        darkBlue: "#268D93",
+        darkBlue: "#118a91",
         mediumGreen: "#057a2c",
     },
 };
@@ -25,6 +25,20 @@ export const OXXO_COLORS = {
 export const mainMuiTheme: Theme = createTheme({
     typography: {
         fontFamily: ["Roboto", "Helvetica", "sans-serif"].join(","),
+    },
+    palette: {
+        primary: {
+            light: "#60D8DF",
+            main: "#14a9b1",
+            dark: "#057b81",
+            contrastText: "#eceaeb",
+        },
+        secondary: {
+            light: "#F44829",
+            main: "#B71C00",
+            dark: "#AB2A13",
+            contrastText: "#eceaeb",
+        },
     },
 });
 

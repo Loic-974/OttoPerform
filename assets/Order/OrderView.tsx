@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Box, Grid, Skeleton } from "@mui/material";
 import React = require("react");
 import styled from "styled-components";
 import { OrderImportAccordion } from "./OrderImportAccordion";
@@ -16,6 +16,7 @@ export const OrderView = ({}: {}) => {
         getOrdersData();
     }, []);
 
+    console.log(ordersData);
     return (
         <StyledOrderContainer>
             <StyledOrderGridContainer container>
@@ -26,11 +27,21 @@ export const OrderView = ({}: {}) => {
                     <AddOrderAccordion onSubmitCommand={getOrdersData} />
                 </StyledGridItem>
                 <Grid item xs={12}>
-                    <OrderTable
-                        unPreparedData={
-                            ordersData.value?.length ? ordersData?.value : []
-                        }
-                    />
+                    {!!ordersData.value ? (
+                        <OrderTable
+                            unPreparedData={
+                                ordersData.value?.length
+                                    ? ordersData?.value
+                                    : []
+                            }
+                        />
+                    ) : (
+                        <Skeleton
+                            variant="rounded"
+                            width="100%"
+                            height={450}
+                        ></Skeleton>
+                    )}
                 </Grid>
             </StyledOrderGridContainer>
         </StyledOrderContainer>

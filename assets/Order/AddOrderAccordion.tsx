@@ -53,13 +53,41 @@ export const AddOrderAccordion = ({
     const [orderProduct, setOrderProduct] = useState<IProduct>();
     const [orderQte, setOrderQte] = useState(0);
 
+    const areAllFieldComplete = React.useMemo(() => {
+        return (
+            !!clientName &&
+            !!clientFirstName &&
+            !!clientAdresse &&
+            !!clientVille &&
+            !!clientCodeP &&
+            !!clientSecteur &&
+            !!orderType &&
+            !!orderProduct &&
+            !!orderQte
+        );
+    }, [
+        clientName,
+        clientFirstName,
+        clientAdresse,
+        clientVille,
+        clientCodeP,
+        clientSecteur,
+        orderType,
+        orderProduct,
+        orderQte,
+    ]);
+
     // ---------------------------- OPTIONS SELECT ------------------------- //
 
-    const cityOptions: IVilleOption[] = DUMMY_API_CITY_GOUV.map((item) => ({
-        label: item.nom,
-        codePostaux: item.codesPostaux,
-        secteur: item.secteur,
-    }));
+    const cityOptions: IVilleOption[] = React.useMemo(
+        () =>
+            DUMMY_API_CITY_GOUV.map((item) => ({
+                label: item.nom,
+                codePostaux: item.codesPostaux,
+                secteur: item.secteur,
+            })),
+        []
+    );
 
     const codePostalOptions = React.useMemo(
         () => clientVille?.codePostaux || [],
@@ -109,6 +137,20 @@ export const AddOrderAccordion = ({
         await axios.post("/commande/addCommand", { clientData, orderData });
 
         onSubmitCommand();
+        resetCommand();
+    }
+
+    function resetCommand() {
+        setExistingClient(undefined);
+        setClientName("");
+        setClientFirstName("");
+        setClientAdresse("");
+        setClientVille(null);
+        setClientCodeP("");
+        setClientSecteur(0);
+        setOrderType("");
+        setOrderProduct(undefined);
+        setOrderQte(0);
     }
 
     // -------------------------------------------------------------------------------------------------------------------- //
@@ -304,14 +346,26 @@ export const AddOrderAccordion = ({
                                 }
                             />
                         </StyledGridItem>
-                        <StyledGridItem item xs={6} justifySelf={"self-end"}>
+                        <StyledButtonGridItem
+                            item
+                            xs={6}
+                            justifySelf={"self-end"}
+                        >
                             <StyledButton
+                                disabled={!areAllFieldComplete}
                                 variant="contained"
                                 onClick={() => addNewCommand()}
                             >
                                 Ajouter la commande
                             </StyledButton>
-                        </StyledGridItem>
+                            <StyledButton
+                                variant="contained"
+                                color="secondary"
+                                onClick={() => resetCommand()}
+                            >
+                                Réinitialiser la commande
+                            </StyledButton>
+                        </StyledButtonGridItem>
                     </StyledGridItemContainer>
                 </Grid>
             </AccordionDetails>
@@ -348,7 +402,7 @@ async function getAllProduct() {
 // -------------------------------------------------------------------------------------------------------------------- //
 
 const StyledAccordionSummary = styled(AccordionSummary)`
-    background-color: ${({ theme }) => theme.colors.darkGrey};
+    background-color: ${({ theme }) => theme.colors.darkBlue};
     color: ${({ theme }) => theme.colors.lightGrey};
     min-height: 0;
     .MuiAccordionSummary-content.Mui-expanded {
@@ -382,6 +436,11 @@ const StyledGridItem = styled(Grid)`
     align-items: center;
     justify-content: center;
 `;
+const StyledButtonGridItem = styled(Grid)`
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+`;
 
 const StyledGridTitle = styled(Grid)`
     display: flex;
@@ -393,7 +452,7 @@ const StyledGridTitle = styled(Grid)`
         margin-block-end: 0.2rem;
         text-align: center;
         padding: 3px 0;
-        background-color: ${({ theme }) => theme.colors.darkBlue};
+        background-color: ${({ theme }) => theme.colors.hardGrey};
         border-radius: 6px;
         color: #fff;
     }
@@ -421,5 +480,6 @@ const StyledAsyncAutoComplete = styled(AsyncAutoComplete)`
     }
 `;
 const StyledButton = styled(Button)`
-    padding: 6px 24px;
+    padding: 6px 16px;
+    font-size: 0.7rem;
 `;
