@@ -39,6 +39,22 @@ class CommandeRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * *
+     * Find All Orders with the given state
+     * @param string $state
+     * @return Commande[]
+     */
+    public function findAllByState(string $state):array{
+        return $this->createQueryBuilder('c')
+                   ->andWhere('c.statut = :val')
+                   ->setParameter('val', $state)
+                   ->orderBy('c.id', 'ASC')
+                   ->getQuery()
+                   ->getResult()
+               ;
+    }
+
 //    /**
 //     * @return Commande[] Returns an array of Commande objects
 //     */

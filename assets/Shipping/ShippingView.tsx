@@ -1,9 +1,25 @@
 import { Grid } from "@mui/material";
+import axios from "axios";
 import React = require("react");
+import { useAsyncFn } from "react-use";
 import styled from "styled-components";
+import { ICommande } from "../api/interface/ICommande";
 import { ShippingCard } from "./lib/ShippingCard";
+import {
+    DetailsRalComponent,
+    DetailsRalRateComponent,
+} from "./lib/ShippingRALComponents";
 
 export const ShippingView = ({}: {}) => {
+    const [awaitingShippingData, getAwaitingShippingData] =
+        useAsyncFn(getAllWaitingOrder);
+    const [shippingData, getShippingData] = useAsyncFn(getAllInShippingOrder);
+
+    React.useEffect(() => {
+        getAwaitingShippingData();
+        getShippingData();
+    }, []);
+
     // -------------------------------------------------------------------------------------------------------------------- //
     //---------------------------------------------------- Template ------------------------------------------------------- //
     // -------------------------------------------------------------------------------------------------------------------- //
@@ -12,10 +28,29 @@ export const ShippingView = ({}: {}) => {
             <Grid container>
                 <StyledGridCardContainer item xs={12}>
                     <StyledGridItem item xs={3}>
-                        <ShippingCard title="Reste à livrer" />
+                        <ShippingCard title="Reste à livrer">
+                            <DetailsRalComponent
+                                awaitingData={
+                                    awaitingShippingData.value
+                                        ? awaitingShippingData.value
+                                        : []
+                                }
+                            />
+                        </ShippingCard>
                     </StyledGridItem>
                     <StyledGridItem item xs={3}>
-                        <ShippingCard title="Livraison Programmée" />
+                        <ShippingCard title="Livraison Programmée">
+                            <DetailsRalRateComponent
+                                awaitingData={
+                                    awaitingShippingData.value
+                                        ? awaitingShippingData.value
+                                        : []
+                                }
+                                shippingData={
+                                    shippingData.value ? shippingData.value : []
+                                }
+                            />
+                        </ShippingCard>
                     </StyledGridItem>
                     <StyledGridItem item xs={3}>
                         <ShippingCard title="Taux de Livraison" />
@@ -31,6 +66,27 @@ export const ShippingView = ({}: {}) => {
         </StyledShippedContainer>
     );
 };
+
+async function getAllWaitingOrder() {
+    const query = await axios.post<ICommande[]>(
+        "/commande/getAllCommandByState",
+        {
+            orderState: "En Attente",
+        }
+    );
+    const data = query.data;
+    return data;
+}
+async function getAllInShippingOrder() {
+    const query = await axios.post<ICommande[]>(
+        "/commande/getAllCommandByState",
+        {
+            orderState: "En Livraison",
+        }
+    );
+    const data = query.data;
+    return data;
+}
 
 // -------------------------------------------------------------------------------------------------------------------- //
 //---------------------------------------------------- Style ------------------------------------------------------- //

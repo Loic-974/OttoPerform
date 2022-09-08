@@ -49,7 +49,7 @@ export function buildOrderTableColumn() {
 const CustomStateCell = ({
     value,
 }: {
-    value: "En Attente" | "Livrée" | "En Livraison" | "Annulé";
+    value: "En Attente" | "Livrée" | "En Livraison" | "Annule";
 }) => {
     const color = useMemo(() => {
         switch (value) {
@@ -59,7 +59,7 @@ const CustomStateCell = ({
                 return OXXO_COLORS.colors.mediumBlue;
             case "Livrée":
                 return OXXO_COLORS.colors.mediumGreen;
-            case "Annulé":
+            case "Annule":
                 return OXXO_COLORS.colors.mediumRed;
             default:
                 return OXXO_COLORS.colors.darkGrey;

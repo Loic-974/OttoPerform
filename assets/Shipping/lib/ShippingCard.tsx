@@ -33,6 +33,7 @@ const StyledCardHeader = styled(CardHeader)`
     justify-content: center;
     width: 100%;
     padding: 6px;
+    max-height: 250px;
 
     .MuiTypography-root {
         font-size: 1rem;

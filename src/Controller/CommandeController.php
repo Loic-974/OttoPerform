@@ -102,4 +102,29 @@ class CommandeController extends AbstractController
 
     }
 
+
+    #[Route('/getAllCommandByState', name: 'app_commande_getAllByState')]
+    public function getAllCommandByState(Request $request){
+
+        $unParsedContent = $request->getContent();
+        $parsedContent = json_decode($unParsedContent);
+
+        if(isset($parsedContent->orderState)){
+            $commandRepo = new CommandeRepository($this->manager);
+
+            $allOrders = $commandRepo->findAllByState($parsedContent->orderState);
+
+            $result = [];
+
+            foreach($allOrders as $order){
+                array_push($result, $order->toJson());
+            }
+
+            return new Response(json_encode(($result)));
+        }
+        return new Response(json_encode(([])));
+    }
+
+
+
 }
