@@ -66,6 +66,7 @@ const StyledGridCardContainer = styled(Grid)`
     /* display: flex;
     align-items: stretch;
     justify-content: space-around; */
+    box-sizing: border-box;
     padding-bottom: 12px;
     border-bottom: 2px solid ${({ theme }) => theme.colors.darkGrey};
     /* flex-shrink: 2; */

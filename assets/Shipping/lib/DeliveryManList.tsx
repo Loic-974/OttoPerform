@@ -25,7 +25,7 @@ export const DeliveryManList = ({
     setSelectedDeliveryMan: (arg: ILivreur) => void;
 }) => {
     return (
-        <StyledListContainer>
+        <StyledListContainer elevation={2}>
             <StyledTitle>
                 <p>Livreurs Disponibles</p>
             </StyledTitle>
@@ -58,19 +58,20 @@ export const DeliveryManList = ({
     );
 };
 
-const StyledListContainer = styled.div`
+const StyledListContainer = styled(Paper)`
     width: 80%;
-    margin-left: 10%;
     /* height: 100%; */
     display: flex;
     flex-direction: column;
-    background-color: ${({ theme }) => theme.colors.lightGrey};
+    /* background-color: ${({ theme }) => theme.colors.lightGrey}; */
 `;
 
 const StyledTitle = styled.div`
-    width: 90%;
-    padding: 8px;
+    width: 85%;
+    padding: 8px 16px;
+    margin: auto;
     border-bottom: 2px solid ${({ theme }) => theme.colors.hardGrey};
+
     p {
         font-weight: 600;
         margin-block-start: 0.6rem;

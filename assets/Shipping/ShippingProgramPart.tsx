@@ -1,5 +1,8 @@
 import { Grid } from "@mui/material";
 import axios from "axios";
+import { Dayjs } from "dayjs";
+import dayjs = require("dayjs");
+import { useState } from "react";
 import React = require("react");
 import { useAsyncFn } from "react-use";
 import styled from "styled-components";
@@ -19,6 +22,12 @@ export const ShippingProgramPart = ({
     const [selectedDeliveryMan, setSelectedDeliveryMan] =
         React.useState<ILivreur>();
 
+    const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
+
+    const [scheduleOrder, setScheduleOrder] = useState<ICommande[]>([]);
+
+    console.log(scheduleOrder);
+
     React.useEffect(() => {
         getAllDeliveryMan();
     }, []);
@@ -35,10 +44,19 @@ export const ShippingProgramPart = ({
                 />
             </StyledGridItem>
             <StyledGridItem item xs={3}>
-                <DeliveryDatePicker />
+                <DeliveryDatePicker
+                    selectedDate={selectedDate}
+                    setSelectDate={setSelectedDate}
+                />
             </StyledGridItem>
             <StyledGridItem item xs={6}>
-                <TransfertListOrder />
+                {/* {!!selectedDeliveryMan && !!selectDate && ( */}
+                <TransfertListOrder
+                    awaitingData={awaitingShippingOrderData}
+                    selectedDate={selectedDate}
+                    selectedDeliveryMan={selectedDeliveryMan}
+                />
+                {/* )} */}
             </StyledGridItem>
         </StyledGridProgramContainer>
     );
@@ -54,7 +72,7 @@ const StyledGridItem = styled(Grid)`
     height: 100%;
     display: flex;
     /* align-items: center; */
-    /*justify-content: center;
+    justify-content: center;
     /* height: 100%; */
     /* box-sizing: border-box; */
 `;

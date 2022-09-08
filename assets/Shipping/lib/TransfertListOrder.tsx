@@ -7,24 +7,40 @@ import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
+import { ICommande } from "../../api/interface/ICommande";
+import { intersectionBy } from "lodash";
+import { Dayjs } from "dayjs";
+import { ILivreur } from "../../api/interface/ILivreur";
 
-function not(a: readonly number[], b: readonly number[]) {
+function not(a: ICommande[], b: ICommande[]) {
     return a.filter((value) => b.indexOf(value) === -1);
 }
 
-function intersection(a: readonly number[], b: readonly number[]) {
+function intersection(a: ICommande[], b: ICommande[]) {
     return a.filter((value) => b.indexOf(value) !== -1);
 }
 
-export function TransfertListOrder() {
-    const [checked, setChecked] = React.useState<readonly number[]>([]);
-    const [left, setLeft] = React.useState<readonly number[]>([0, 1, 2, 3]);
-    const [right, setRight] = React.useState<readonly number[]>([4, 5, 6, 7]);
+export const TransfertListOrder = ({
+    awaitingData,
+    selectedDate,
+    selectedDeliveryMan,
+}: {
+    awaitingData: ICommande[];
+    selectedDate: Dayjs | null;
+    selectedDeliveryMan: ILivreur | undefined;
+}) => {
+    const [checked, setChecked] = React.useState<ICommande[]>([]);
 
-    const leftChecked = intersection(checked, left);
-    const rightChecked = intersection(checked, right);
+    const [awaitingOrder, setAwaitingOrder] = React.useState<ICommande[]>([]);
 
-    const handleToggle = (value: number) => () => {
+    React.useEffect(() => setAwaitingOrder(awaitingData), [awaitingData]);
+
+    const [shippingOrder, setShippingOrder] = React.useState<ICommande[]>([]);
+
+    const leftChecked = intersection(checked, awaitingOrder);
+    const rightChecked = intersection(checked, shippingOrder);
+
+    const handleToggle = (value: ICommande) => () => {
         const currentIndex = checked.indexOf(value);
         const newChecked = [...checked];
 
@@ -38,36 +54,36 @@ export function TransfertListOrder() {
     };
 
     const handleAllRight = () => {
-        setRight(right.concat(left));
-        setLeft([]);
+        setShippingOrder(shippingOrder.concat(awaitingOrder));
+        setAwaitingOrder([]);
     };
 
     const handleCheckedRight = () => {
-        setRight(right.concat(leftChecked));
-        setLeft(not(left, leftChecked));
+        setShippingOrder(shippingOrder.concat(leftChecked));
+        setAwaitingOrder(not(awaitingOrder, leftChecked));
         setChecked(not(checked, leftChecked));
     };
 
     const handleCheckedLeft = () => {
-        setLeft(left.concat(rightChecked));
-        setRight(not(right, rightChecked));
+        setAwaitingOrder(awaitingOrder.concat(rightChecked));
+        setShippingOrder(not(shippingOrder, rightChecked));
         setChecked(not(checked, rightChecked));
     };
 
     const handleAllLeft = () => {
-        setLeft(left.concat(right));
-        setRight([]);
+        setAwaitingOrder(awaitingOrder.concat(shippingOrder));
+        setShippingOrder([]);
     };
 
-    const customList = (items: readonly number[]) => (
-        <div>
+    const customList = (items: ICommande[]) => {
+        // <div>
+        return (
             <List dense component="div" role="list">
-                {items.map((value: number) => {
-                    const labelId = `transfer-list-item-${value}-label`;
-
+                {items.map((value: ICommande) => {
+                    const labelId = `transfer-list-item-${value.id}-label`;
                     return (
                         <ListItem
-                            key={value}
+                            key={value.id}
                             role="listitem"
                             button
                             onClick={handleToggle(value)}
@@ -84,71 +100,79 @@ export function TransfertListOrder() {
                             </ListItemIcon>
                             <ListItemText
                                 id={labelId}
-                                primary={`List item ${value + 1}`}
+                                primary={`List item ${value.client.nom + 1}`}
                             />
                         </ListItem>
                     );
                 })}
                 <ListItem />
             </List>
-        </div>
-    );
+            // </div>
+        );
+    };
 
     return (
-        <Grid
-            container
-            item
-            xs={12}
-            spacing={2}
-            justifyContent="center"
-            alignItems="center"
-        >
-            <Grid item>{customList(left)}</Grid>
-            <Grid item>
-                <Grid container direction="column" alignItems="center">
-                    <Button
-                        sx={{ my: 0.5 }}
-                        variant="outlined"
-                        size="small"
-                        onClick={handleAllRight}
-                        disabled={left.length === 0}
-                        aria-label="move all right"
-                    >
-                        ≫
-                    </Button>
-                    <Button
-                        sx={{ my: 0.5 }}
-                        variant="outlined"
-                        size="small"
-                        onClick={handleCheckedRight}
-                        disabled={leftChecked.length === 0}
-                        aria-label="move selected right"
-                    >
-                        &gt;
-                    </Button>
-                    <Button
-                        sx={{ my: 0.5 }}
-                        variant="outlined"
-                        size="small"
-                        onClick={handleCheckedLeft}
-                        disabled={rightChecked.length === 0}
-                        aria-label="move selected left"
-                    >
-                        &lt;
-                    </Button>
-                    <Button
-                        sx={{ my: 0.5 }}
-                        variant="outlined"
-                        size="small"
-                        onClick={handleAllLeft}
-                        disabled={right.length === 0}
-                        aria-label="move all left"
-                    >
-                        ≪
-                    </Button>
+        <Paper elevation={2}>
+            <Grid
+                container
+                item
+                xs={12}
+                spacing={2}
+                justifyContent="center"
+                alignItems="center"
+            >
+                <Grid item>{customList(awaitingOrder)}</Grid>
+                <Grid item>
+                    <Grid container direction="column" alignItems="center">
+                        <Button
+                            sx={{ my: 0.5 }}
+                            variant="outlined"
+                            size="small"
+                            onClick={handleAllRight}
+                            disabled={awaitingOrder.length === 0}
+                            aria-label="move all right"
+                        >
+                            ≫
+                        </Button>
+                        <Button
+                            sx={{ my: 0.5 }}
+                            variant="outlined"
+                            size="small"
+                            onClick={handleCheckedRight}
+                            disabled={leftChecked.length === 0}
+                            aria-label="move selected right"
+                        >
+                            &gt;
+                        </Button>
+                        <Button
+                            sx={{ my: 0.5 }}
+                            variant="outlined"
+                            size="small"
+                            onClick={handleCheckedLeft}
+                            disabled={rightChecked.length === 0}
+                            aria-label="move selected left"
+                        >
+                            &lt;
+                        </Button>
+                        <Button
+                            sx={{ my: 0.5 }}
+                            variant="outlined"
+                            size="small"
+                            onClick={handleAllLeft}
+                            disabled={shippingOrder.length === 0}
+                            aria-label="move all left"
+                        >
+                            ≪
+                        </Button>
+                    </Grid>
                 </Grid>
+                <Grid item>{customList(shippingOrder)}</Grid>
             </Grid>
-            <Grid item>{customList(right)}</Grid>
-        </Grid>
+            <div>
+                <Button disabled={!shippingOrder.length}>
+                    Confirmer les Livraisons
+                </Button>
+            </div>
+        </Paper>
     );
-}
+};
