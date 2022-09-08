@@ -90,7 +90,7 @@ const HomeLayout = ({ setIsUserConnected }: { setIsUserConnected: any }) => {
     }, [isUserConnected]);
 
     if (isUserConnected) {
-        return <Navigate to="/orders" replace={true} />;
+        return <Navigate to="/shipping" replace={true} />;
     }
 
     return (

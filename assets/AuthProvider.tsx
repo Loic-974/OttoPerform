@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         if (connectionState.connexionAllowed) {
             setUserEmail(connectionState.userEmail);
-            navigate("/orders");
+            navigate("/shipping");
         }
     }
 
