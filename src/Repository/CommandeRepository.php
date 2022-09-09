@@ -30,6 +30,7 @@ class CommandeRepository extends ServiceEntityRepository
         }
     }
 
+
     public function remove(Commande $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);

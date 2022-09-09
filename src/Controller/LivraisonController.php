@@ -63,18 +63,15 @@ class LivraisonController extends AbstractController
                         $livraison->setIdLivreur($livreur);
                         $livraison->setDateLivraison(date_create());
                         $livraisonRepo->add($livraison ,true);
+                        // ---- Update Order State ----
+                        $commande->setStatut("En Livraison");
+                        $commandeRepo->add( $commande,true);
                         return new Response("ok");
                     }
                     return new Response("Entite non toruvé");
                 }
                 return new Response("Objet Incorrect");
             }
-
-            // $livraisonRepo = new LivraisonRepository($this->manager);
-
-            // $allLivraisons = $livraisonRepo->findAll();
-
-            // $result = array_map(fn($livraison) => $livraison->toJson(true),  $allLivraisons);
             
         }
     
