@@ -41,8 +41,18 @@ export const DetailsRalRateComponent = ({
     awaitingData: ICommande[];
     shippingData: ICommande[];
 }) => {
+    const shipProductCount = React.useMemo(() => {
+        return shippingData.reduce((acc, item) => acc + item.quantite, 0);
+    }, [shippingData]);
+
+    const awaitProductCount = React.useMemo(() => {
+        return awaitingData.reduce((acc, item) => acc + item.quantite, 0);
+    }, [awaitingData]);
+
     const ralRate = React.useMemo(() => {
-        return (shippingData.length / awaitingData.length) * 100;
+        return (
+            (shipProductCount / (awaitProductCount + shipProductCount)) * 100
+        );
     }, [awaitingData, shippingData]);
 
     return (
@@ -53,7 +63,7 @@ export const DetailsRalRateComponent = ({
                 valueExplenation="RAL Programmé"
             />
             <CircleWithValue
-                valueToDisplay={shippingData.length}
+                valueToDisplay={shipProductCount}
                 valueUnit="Bacs"
                 valueExplenation="En Livraison"
             />

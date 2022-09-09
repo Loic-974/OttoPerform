@@ -25,18 +25,24 @@ export const TransfertListOrder = ({
     awaitingData,
     selectedDate,
     selectedDeliveryMan,
+    updateAllState,
 }: {
     awaitingData: ICommande[];
     selectedDate: Dayjs | null;
     selectedDeliveryMan: ILivreur | undefined;
+    updateAllState: () => void;
 }) => {
     const [checked, setChecked] = React.useState<ICommande[]>([]);
 
     const [awaitingOrder, setAwaitingOrder] = React.useState<ICommande[]>([]);
 
-    React.useEffect(() => setAwaitingOrder(awaitingData), [awaitingData]);
-
     const [shippingOrder, setShippingOrder] = React.useState<ICommande[]>([]);
+
+    React.useEffect(() => {
+        setAwaitingOrder(awaitingData);
+        setShippingOrder([]);
+        setChecked([]);
+    }, [awaitingData, selectedDeliveryMan]);
 
     async function createOrderShipping() {
         const dataObject = shippingOrder.map((item) => ({
@@ -44,7 +50,9 @@ export const TransfertListOrder = ({
             commandeId: item.id,
         }));
 
-        axios.post("/livraison/setLivraison", dataObject);
+        await axios.post("/livraison/setLivraison", dataObject);
+
+        await updateAllState();
     }
 
     const leftChecked = intersection(checked, awaitingOrder);

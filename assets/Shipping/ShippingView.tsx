@@ -28,6 +28,12 @@ export const ShippingView = ({}: {}) => {
         getAllDeliveryMan();
     }, []);
 
+    async function updateAllState() {
+        await getAwaitingShippingOrderData();
+        await getShippingOrderData();
+        await getShippingData();
+    }
+
     // -------------------------------------------------------------------------------------------------------------------- //
     //---------------------------------------------------- Template ------------------------------------------------------- //
     // -------------------------------------------------------------------------------------------------------------------- //
@@ -58,6 +64,7 @@ export const ShippingView = ({}: {}) => {
                     allDeliveryMan={
                         allDeliveryMan.value ? allDeliveryMan.value : []
                     }
+                    updateAllState={updateAllState}
                 />
             </StyledGridContainer>
         </StyledShippedContainer>

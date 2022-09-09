@@ -14,9 +14,11 @@ import { TransfertListOrder } from "./lib/TransfertListOrder";
 export const ShippingProgramPart = ({
     awaitingShippingOrderData,
     allDeliveryMan,
+    updateAllState,
 }: {
     awaitingShippingOrderData: ICommande[];
     allDeliveryMan: ILivreur[];
+    updateAllState: () => void;
 }) => {
     const [selectedDeliveryMan, setSelectedDeliveryMan] =
         React.useState<ILivreur>();
@@ -28,7 +30,7 @@ export const ShippingProgramPart = ({
         return awaitingShippingOrderData.filter(
             (item) => item.client.secteur.id === selectedDeliveryMan?.secteur.id
         );
-    }, [selectedDeliveryMan]);
+    }, [selectedDeliveryMan, awaitingShippingOrderData]);
 
     return (
         <StyledGridProgramContainer container item xs={12}>
@@ -51,6 +53,7 @@ export const ShippingProgramPart = ({
                     awaitingData={filteredShippingOrder}
                     selectedDate={selectedDate}
                     selectedDeliveryMan={selectedDeliveryMan}
+                    updateAllState={updateAllState}
                 />
                 {/* )} */}
             </StyledGridItem>
