@@ -5,6 +5,7 @@ import { useAsyncFn } from "react-use";
 import styled from "styled-components";
 import { ICommande } from "../api/interface/ICommande";
 import { ILivraison } from "../api/interface/ILivraison";
+import { ILivreur } from "../api/interface/ILivreur";
 
 import { ShippingCardPart } from "./ShippingCardPart";
 import { ShippingProgramPart } from "./ShippingProgramPart";
@@ -18,10 +19,13 @@ export const ShippingView = ({}: {}) => {
 
     const [shippingData, getShippingData] = useAsyncFn(getAllShipping);
 
+    const [allDeliveryMan, getAllDeliveryMan] = useAsyncFn(_getAllDeliveryMan);
+
     React.useEffect(() => {
         getAwaitingShippingOrderData();
         getShippingOrderData();
         getShippingData();
+        getAllDeliveryMan();
     }, []);
 
     // -------------------------------------------------------------------------------------------------------------------- //
@@ -40,6 +44,9 @@ export const ShippingView = ({}: {}) => {
                         shippingOrderData.value ? shippingOrderData.value : []
                     }
                     shippingData={shippingData.value ? shippingData.value : []}
+                    allDeliveryMan={
+                        allDeliveryMan.value ? allDeliveryMan.value : []
+                    }
                 />
 
                 <ShippingProgramPart
@@ -47,6 +54,9 @@ export const ShippingView = ({}: {}) => {
                         awaitingShippingOrderData.value
                             ? awaitingShippingOrderData.value
                             : []
+                    }
+                    allDeliveryMan={
+                        allDeliveryMan.value ? allDeliveryMan.value : []
                     }
                 />
             </StyledGridContainer>
@@ -80,6 +90,12 @@ async function getAllInShippingOrder() {
 }
 async function getAllShipping() {
     const query = await axios.get<ILivraison[]>("/livraison/getlivraison");
+    const data = query.data;
+    return data;
+}
+
+async function _getAllDeliveryMan() {
+    const query = await axios.get<ILivreur[]>("/livreur/getAllLivreur");
     const data = query.data;
     return data;
 }

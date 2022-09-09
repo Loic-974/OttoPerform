@@ -12,14 +12,14 @@ export const ShippingCard = ({
     return (
         <StyledCard>
             <StyledCardHeader title={title} />
-            <CardContent>{children}</CardContent>
+            <StyledCardContent>{children}</StyledCardContent>
         </StyledCard>
     );
 };
 
 const StyledCard = styled(Card)`
     width: 80%;
-    background-color: ${({ theme }) => theme.colors.hardGrey};
+    background-color: ${({ theme }) => theme.colors.darkGrey};
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -45,5 +45,22 @@ const StyledCardHeader = styled(CardHeader)`
         flex: none;
         padding-bottom: 4px;
         border-bottom: 1px solid ${({ theme }) => theme.colors.lightGrey};
+    }
+`;
+
+const StyledCardContent = styled(CardContent)`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    padding: 0;
+    .MuiCardContent-root {
+        padding: 0;
+    }
+    .MuiCardContent-root:last-child {
+        padding-bottom: 0;
+    }
+    &.MuiCardContent-root:last-child {
+        padding: 0px;
+        padding-bottom: 0;
     }
 `;

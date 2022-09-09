@@ -3,8 +3,10 @@ import React = require("react");
 import styled from "styled-components";
 import { ICommande } from "../api/interface/ICommande";
 import { ILivraison } from "../api/interface/ILivraison";
+import { ILivreur } from "../api/interface/ILivreur";
 import { ShippingCard } from "./lib/ShippingCard";
 import {
+    DelayToShipOrder,
     DetailsRalComponent,
     DetailsRalRateComponent,
     DetailsShippingRateComponent,
@@ -14,10 +16,12 @@ export const ShippingCardPart = ({
     awaitingShippingOrderData,
     shippingOrderData,
     shippingData,
+    allDeliveryMan,
 }: {
     awaitingShippingOrderData: ICommande[];
     shippingOrderData: ICommande[];
     shippingData: ILivraison[];
+    allDeliveryMan: ILivreur[];
 }) => {
     return (
         <StyledGridCardContainer container item xs={12}>
@@ -50,11 +54,14 @@ export const ShippingCardPart = ({
                 <ShippingCard title="Taux de Livraison">
                     <DetailsShippingRateComponent
                         shippingData={shippingData ? shippingData : []}
+                        allDeliveryMan={allDeliveryMan ? allDeliveryMan : []}
                     />
                 </ShippingCard>
             </StyledGridItem>
             <StyledGridItem item xs={3}>
-                <ShippingCard title="Temps moyen de Livraison" />
+                <ShippingCard title="Temps moyen de Livraison">
+                    <DelayToShipOrder />
+                </ShippingCard>
             </StyledGridItem>
         </StyledGridCardContainer>
     );
@@ -62,12 +69,12 @@ export const ShippingCardPart = ({
 
 const StyledGridCardContainer = styled(Grid)`
     width: 100%;
-    height: 33%;
+    height: 25%;
     /* display: flex;
     align-items: stretch;
     justify-content: space-around; */
     box-sizing: border-box;
-    padding-bottom: 12px;
+    padding-bottom: 32px;
     border-bottom: 2px solid ${({ theme }) => theme.colors.darkGrey};
     /* flex-shrink: 2; */
 `;

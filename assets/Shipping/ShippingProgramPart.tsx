@@ -4,7 +4,6 @@ import { Dayjs } from "dayjs";
 import dayjs = require("dayjs");
 import { useMemo, useState } from "react";
 import React = require("react");
-import { useAsyncFn } from "react-use";
 import styled from "styled-components";
 import { ICommande } from "../api/interface/ICommande";
 import { ILivreur } from "../api/interface/ILivreur";
@@ -14,11 +13,11 @@ import { TransfertListOrder } from "./lib/TransfertListOrder";
 
 export const ShippingProgramPart = ({
     awaitingShippingOrderData,
+    allDeliveryMan,
 }: {
     awaitingShippingOrderData: ICommande[];
+    allDeliveryMan: ILivreur[];
 }) => {
-    const [allDeliveryMan, getAllDeliveryMan] = useAsyncFn(_getAllDeliveryMan);
-
     const [selectedDeliveryMan, setSelectedDeliveryMan] =
         React.useState<ILivreur>();
 
@@ -31,17 +30,11 @@ export const ShippingProgramPart = ({
         );
     }, [selectedDeliveryMan]);
 
-    React.useEffect(() => {
-        getAllDeliveryMan();
-    }, []);
-
     return (
         <StyledGridProgramContainer container item xs={12}>
             <StyledGridItem item xs={3}>
                 <DeliveryManList
-                    allDeliveryMan={
-                        allDeliveryMan.value ? allDeliveryMan.value : []
-                    }
+                    allDeliveryMan={allDeliveryMan ?? []}
                     selectedDeliveryMan={selectedDeliveryMan}
                     setSelectedDeliveryMan={setSelectedDeliveryMan}
                 />
@@ -65,12 +58,6 @@ export const ShippingProgramPart = ({
     );
 };
 
-async function _getAllDeliveryMan() {
-    const query = await axios.get<ILivreur[]>("/livreur/getAllLivreur");
-    const data = query.data;
-    return data;
-}
-
 const StyledGridItem = styled(Grid)`
     height: 100%;
     display: flex;
@@ -82,12 +69,12 @@ const StyledGridItem = styled(Grid)`
 
 const StyledGridProgramContainer = styled(Grid)`
     width: 100%;
-    height: 66%;
+    height: 75%;
     /* overflow: hidden;
     display: flex;
     align-items: stretch; */
     box-sizing: border-box;
     /* justify-content: space-around; */
     /* flex: 2; */
-    padding-top: 12px;
+    padding-top: 32px;
 `;
