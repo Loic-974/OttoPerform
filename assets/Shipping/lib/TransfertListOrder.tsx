@@ -12,6 +12,9 @@ import { intersectionBy } from "lodash";
 import { Dayjs } from "dayjs";
 import { ILivreur } from "../../api/interface/ILivreur";
 import axios from "axios";
+import styled from "styled-components";
+import { ListSubheader } from "@mui/material";
+import { AssignmentLate, Warning } from "@mui/icons-material";
 
 function not(a: ICommande[], b: ICommande[]) {
     return a.filter((value) => b.indexOf(value) === -1);
@@ -93,6 +96,10 @@ export const TransfertListOrder = ({
         setShippingOrder([]);
     };
 
+    // -------------------------------------------------------------------------------------------------------------------- //
+    //---------------------------------------------------- Private Component ---------------------------------------------- //
+    // -------------------------------------------------------------------------------------------------------------------- //
+
     const customList = (items: ICommande[]) => {
         // <div>
         return (
@@ -118,31 +125,76 @@ export const TransfertListOrder = ({
                             </ListItemIcon>
                             <ListItemText
                                 id={labelId}
-                                primary={`${value.client.nom} ${value.client.prenom}`}
+                                primary={` ${value.client.nom} ${value.client.prenom} ${value.produit.nom}`}
+                                secondary={`${value.client.adresse} ${value.client.ville}`}
                             />
                         </ListItem>
                     );
                 })}
+                {!items.length && (
+                    <ListItem key={"empty"} role="listitem">
+                        <ListItemIcon>
+                            <AssignmentLate />
+                        </ListItemIcon>
+                        <ListItemText
+                            id={"empty"}
+                            primary={`Aucune Commande`}
+                        />
+                    </ListItem>
+                )}
                 <ListItem />
             </List>
             // </div>
         );
     };
 
+    // -------------------------------------------------------------------------------------------------------------------- //
+    //---------------------------------------------------- Template ------------------------------------------------------- //
+    // -------------------------------------------------------------------------------------------------------------------- //
+
     return (
-        <Paper elevation={2}>
-            <Grid
+        <StyledContainer elevation={2}>
+            <StyledTitle>
+                <p>Journée du {selectedDate?.format("DD MMMM YYYY")}</p>
+            </StyledTitle>
+            <StyledGridContainer
                 container
-                item
-                xs={12}
-                spacing={2}
                 justifyContent="center"
                 alignItems="center"
             >
-                <Grid item>{customList(awaitingOrder)}</Grid>
-                <Grid item>
-                    <Grid container direction="column" alignItems="center">
-                        <Button
+                {/* <StyledGridSubTitle item xs={6}>
+                    <StyledSubtitle>
+                        <p>Titre</p>
+                    </StyledSubtitle>
+                </StyledGridSubTitle> */}
+                <StyledGridColumn container item xs={5}>
+                    <StyledGridSubTitle item xs={12}>
+                        <StyledSubtitle>
+                            <p>Commande à Livrer</p>
+                        </StyledSubtitle>
+                    </StyledGridSubTitle>
+                    <StyledGridList item xs={12}>
+                        {selectedDeliveryMan ? (
+                            customList(awaitingOrder)
+                        ) : (
+                            <ListItem key={"empty"} role="listitem">
+                                <ListItemIcon>
+                                    <Warning />
+                                </ListItemIcon>
+                                <ListItemText
+                                    id={"empty"}
+                                    primary={`Aucun Livreur Sélectionné`}
+                                    secondary={
+                                        "Veuillez Sélectionner un Livreur"
+                                    }
+                                />
+                            </ListItem>
+                        )}
+                    </StyledGridList>
+                </StyledGridColumn>
+                <Grid container item xs={2}>
+                    <Grid container item direction="column" alignItems="center">
+                        <StyledButtonList
                             sx={{ my: 0.5 }}
                             variant="outlined"
                             size="small"
@@ -151,8 +203,8 @@ export const TransfertListOrder = ({
                             aria-label="move all right"
                         >
                             ≫
-                        </Button>
-                        <Button
+                        </StyledButtonList>
+                        <StyledButtonList
                             sx={{ my: 0.5 }}
                             variant="outlined"
                             size="small"
@@ -161,8 +213,8 @@ export const TransfertListOrder = ({
                             aria-label="move selected right"
                         >
                             &gt;
-                        </Button>
-                        <Button
+                        </StyledButtonList>
+                        <StyledButtonList
                             sx={{ my: 0.5 }}
                             variant="outlined"
                             size="small"
@@ -171,8 +223,8 @@ export const TransfertListOrder = ({
                             aria-label="move selected left"
                         >
                             &lt;
-                        </Button>
-                        <Button
+                        </StyledButtonList>
+                        <StyledButtonList
                             sx={{ my: 0.5 }}
                             variant="outlined"
                             size="small"
@@ -181,19 +233,118 @@ export const TransfertListOrder = ({
                             aria-label="move all left"
                         >
                             ≪
-                        </Button>
+                        </StyledButtonList>
                     </Grid>
                 </Grid>
-                <Grid item>{customList(shippingOrder)}</Grid>
-            </Grid>
-            <div>
-                <Button
-                    disabled={!shippingOrder.length}
-                    onClick={() => createOrderShipping()}
-                >
-                    Confirmer les Livraisons
-                </Button>
-            </div>
-        </Paper>
+
+                <StyledGridColumn item xs={5}>
+                    <StyledGridSubTitle item xs={12}>
+                        <StyledSubtitle>
+                            <p>
+                                Attribué à {selectedDeliveryMan?.nom}{" "}
+                                {selectedDeliveryMan?.prenom}
+                            </p>
+                        </StyledSubtitle>
+                    </StyledGridSubTitle>
+                    <StyledGridList item xs={12}>
+                        {customList(shippingOrder)}
+                    </StyledGridList>
+                </StyledGridColumn>
+                <StyledSubmitButtonGrid item xs={12}>
+                    <StyledSubmitButton
+                        variant="contained"
+                        color="primary"
+                        disabled={!shippingOrder.length}
+                        onClick={() => createOrderShipping()}
+                    >
+                        Confirmer les Livraisons
+                    </StyledSubmitButton>
+                </StyledSubmitButtonGrid>
+            </StyledGridContainer>
+        </StyledContainer>
     );
 };
+
+// -------------------------------------------------------------------------------------------------------------------- //
+//---------------------------------------------------- Style ------------------------------------------------------- //
+// -------------------------------------------------------------------------------------------------------------------- //
+
+const StyledContainer = styled(Paper)`
+    width: 90%;
+    background-color: ${(props) => props.theme.colors.darkGrey};
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+`;
+
+const StyledTitle = styled.div`
+    width: 100%;
+    padding: 8px 16px;
+    border-bottom: 2px solid ${({ theme }) => theme.colors.lightGrey};
+    color: ${({ theme }) => theme.colors.lightGrey};
+    p {
+        font-weight: 600;
+        margin-block-start: 0.6rem;
+        margin-block-end: 0.6rem;
+    }
+`;
+
+const StyledGridContainer = styled(Grid)`
+    height: 87%;
+    display: flex;
+`;
+
+const StyledGridColumn = styled(Grid)`
+    height: 95%;
+    padding: 2%;
+`;
+
+const StyledGridSubTitle = styled(Grid)`
+    display: flex;
+    justify-content: center;
+    height: fit-content;
+`;
+const StyledGridList = styled(Grid)`
+    height: 90%;
+    background-color: ${({ theme }) => theme.colors.lightGrey};
+`;
+
+const StyledSubtitle = styled.div`
+    width: 90%;
+    background-color: ${({ theme }) => theme.colors.darkOrange};
+    padding: 4px 16px;
+    border-radius: 6px 6px 0 0;
+    color: ${({ theme }) => theme.colors.lightGrey};
+    p {
+        text-align: center;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        margin-block-start: 0.3rem;
+        margin-block-end: 0.3rem;
+        color: ${({ theme }) => theme.colors.lightGrey};
+    }
+`;
+
+const StyledButtonList = styled(Button)`
+    border-color: ${({ theme }) => theme.colors.mediumBlue};
+    color: ${({ theme }) => theme.colors.mediumBlue};
+    width: 100%;
+
+    :disabled {
+        border-color: ${({ theme }) => theme.colors.mediumGrey};
+        color: ${({ theme }) => theme.colors.mediumGrey};
+    }
+`;
+
+const StyledSubmitButtonGrid = styled(Grid)`
+    display: flex;
+    justify-content: center;
+`;
+
+const StyledSubmitButton = styled(Button)`
+    :disabled {
+        background-color: ${({ theme }) => theme.colors.mediumGrey};
+        color: ${({ theme }) => theme.colors.hardGrey};
+    }
+`;
