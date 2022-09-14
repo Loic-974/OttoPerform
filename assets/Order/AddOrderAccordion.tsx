@@ -34,25 +34,43 @@ export const AddOrderAccordion = ({
 }: {
     onSubmitCommand: () => void;
 }) => {
-    const [isOpen, setIsOpen] = useState(false);
+    // -------------------------------------------------------------------------------------------------------------------- //
+    //---------------------------------------------------- REACT STATE ---------------------------------------------------- //
+    // -------------------------------------------------------------------------------------------------------------------- //
 
-    const [existingClient, setExistingClient] = useState<IClient>();
+    // Define Accordion opening State
+
+    const [isOpen, setIsOpen] = useState(false);
 
     // ----------------------------- CLIENT STATE --------------------------- //
 
+    //Existing Client found in DB and selected by User
+    const [existingClient, setExistingClient] = useState<IClient>();
+    //Name input Value and Setter
     const [clientName, setClientName] = useState<string>("");
+    //FirstName input Value and Setter
     const [clientFirstName, setClientFirstName] = useState<string>("");
+    //Adress input Value and Setter
     const [clientAdresse, setClientAdresse] = useState<string>("");
+    //City input Value and Setter
     const [clientVille, setClientVille] = useState<IVilleOption | null>(null);
+    //CodePostal input Value and Setter
     const [clientCodeP, setClientCodeP] = useState<string | null>("");
+    //Sector input Value and Setter ( Automatically set by city and codeP selection)
     const [clientSecteur, setClientSecteur] = useState<number>(0);
 
     // ----------------------------- ORDER STATE --------------------------- //
-
+    //Kind of order input Value and Setter
     const [orderType, setOrderType] = useState("");
+    //Selected prdouct input Value and Setter
     const [orderProduct, setOrderProduct] = useState<IProduct>();
+    // Order quantity and setter
     const [orderQte, setOrderQte] = useState(0);
 
+    /**
+     * Memoized value who check if all inputs are filled with data
+     * Avoid misclick and send incomplete value
+     */
     const areAllFieldComplete = React.useMemo(() => {
         return (
             !!clientName &&
@@ -79,6 +97,10 @@ export const AddOrderAccordion = ({
 
     // ---------------------------- OPTIONS SELECT ------------------------- //
 
+    /**
+     * All Reunion city object options from Api Gouv.
+     * E.G[{label:"Saint-Paul",codePostaux:["97411",97460,...], secteur:1},...{}]
+     */
     const cityOptions: IVilleOption[] = React.useMemo(
         () =>
             DUMMY_API_CITY_GOUV.map((item) => ({
@@ -88,13 +110,16 @@ export const AddOrderAccordion = ({
             })),
         []
     );
-
+    /**
+     * all codeP options filtered by the selected city
+     */
     const codePostalOptions = React.useMemo(
         () => clientVille?.codePostaux || [],
         [clientVille]
     );
 
     // --------------------------- UseEffect ------------------------------ //
+    // If User select an existing Client we set all client data inside inputs
     React.useEffect(() => {
         if (existingClient) {
             setClientName(existingClient?.nom);
@@ -110,6 +135,7 @@ export const AddOrderAccordion = ({
         }
     }, [existingClient]);
 
+    // Automatically set secteur when user select a city
     React.useEffect(() => {
         if (clientVille) {
             setClientSecteur(clientVille?.secteur);

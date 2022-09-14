@@ -21,6 +21,12 @@ class CommandeRepository extends ServiceEntityRepository
         parent::__construct($registry, Commande::class);
     }
 
+    /**
+     * Add a new Order to the DB
+     * @param Commande $entity
+     * @param boolean $flush
+     * @return void
+     */
     public function add(Commande $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
@@ -30,7 +36,14 @@ class CommandeRepository extends ServiceEntityRepository
         }
     }
 
-
+    /**
+     * WARNING : Must not be used without manager auth
+     * Must invalid order than delete
+     * --- Remove an order from DB -----
+     * @param Commande $entity
+     * @param boolean $flush
+     * @return void
+     */
     public function remove(Commande $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
@@ -41,7 +54,6 @@ class CommandeRepository extends ServiceEntityRepository
     }
 
     /**
-     * *
      * Find All Orders with the given state
      * @param string $state
      * @return Commande[]

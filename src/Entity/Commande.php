@@ -22,30 +22,54 @@ class Commande
 
     #[ORM\Column]
     private ?int $quantite = null;
-
+    
     #[ORM\Column(length: 64)]
     private ?string $statut = null;
-
+    /**
+     * kind of Order
+     *
+     * @var string|null
+     */
     #[ORM\Column(length: 64)]
     private ?string $type = null;
-
+    /**
+     * Client Entity link to this order
+     * One order can have only one Client entity
+     * @var Client|null
+     */
     #[ORM\ManyToOne(inversedBy: 'commandes', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Client $id_client = null;
-
+    /**
+     * Product Entity link to this order
+     * One order can have only one Product entity
+     * @var Produit|null
+     */
     #[ORM\ManyToOne(inversedBy: 'commandes', cascade: ['persist', 'remove']),]
     #[ORM\JoinColumn(nullable: false)]
     private ?Produit $id_produit = null;
-
+    /**
+     * Shipping Entity link to this order
+     *  One order can have only one shipping entity
+     * @var Livraison|null
+     */
     #[ORM\OneToOne(mappedBy: 'id_commande', cascade: ['persist', 'remove'])]
     private ?Livraison $livraison = null;
 
-
+    /**
+     * Get the id of the current Order instance
+     *
+     * @return integer|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
-
+    /**
+     * Get the creation Date of the current Order instance
+     *
+     * @return \DateTimeInterface|null
+     */
     public function getDateCreation(): ?\DateTimeInterface
     {
         return $this->date_creation;
